@@ -1,6 +1,6 @@
 # User flows / CJM (Release 1)
 
-**Проект:** «Тёплый кабинет»  
+**Проект:** «Эмоциональный баланс»  
 **Версия:** v0.1 (draft)  
 **Дата:** 2026-01-06  
 **Основано на:** `docs/PRD.md`, `docs/User-Stories-JTBD-Acceptance-Criteria.md`, исследования `docs/research/01–12`  

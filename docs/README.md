@@ -11,6 +11,9 @@
 - [PRD (требования и границы)](./PRD.md)
 - [User stories / JTBD + Acceptance criteria](./User-Stories-JTBD-Acceptance-Criteria.md)
 - [User flows / CJM (пути пользователя)](./user-flows-cjm.md)
+- [IA (Information Architecture) — структура и навигация](./information-architecture.md)
+- [Контент‑гайд / UX‑копирайтинг](./Content-Guide-UX-Copywriting.md)
+- [Wireframes / прототипы (Figma) — черновая компоновка и кликабельность](./Wireframes-Figma.md)
 - [Исследования (индекс)](./research/README.md)
 
 ## Сгенерированная документация (`docs/generated/`)

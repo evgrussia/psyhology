@@ -1,6 +1,6 @@
 # User Stories / JTBD + Acceptance Criteria (Release 1)
 
-**Проект:** «Тёплый кабинет»  
+**Проект:** «Эмоциональный баланс»  
 **Версия:** v0.1 (draft)  
 **Дата:** 2026-01-06  
 **Основано на:** `docs/PRD.md` + исследования `docs/research/01–12`  
