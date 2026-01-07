@@ -1,0 +1,14 @@
+{
+  "name": "asset-pipeline",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Utilities to post-process generated assets (webp conversion, svg wrappers).",
+  "scripts": {
+    "convert": "node ./src/convert-assets.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  }
+}
+
