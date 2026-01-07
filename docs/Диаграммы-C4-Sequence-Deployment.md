@@ -112,7 +112,7 @@ flowchart LR
   %% общие зависимости
   auth --> booking
   auth --> lkmod
-  auth --> admin[Admin use-cases]
+  auth --> tracking
 ```
 
 ---
@@ -164,14 +164,6 @@ flowchart TB
   Application --> Domain
   Application --> ports
   Infrastructure --> ports
-
-  repo --> Infrastructure
-  gcalc --> Infrastructure
-  ykc --> Infrastructure
-  tgc --> Infrastructure
-  mailer --> Infrastructure
-  objstore --> Infrastructure
-  analyticsSink --> Infrastructure
 ```
 
 ---
