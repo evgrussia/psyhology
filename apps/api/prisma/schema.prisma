@@ -882,6 +882,11 @@ model AuditLogEntry {
 
   actor User @relation(fields: [actorUserId], references: [id])
 
+  @@index([actorUserId], map: "idx_audit_log_actor_user_id")
+  @@index([createdAt(sort: Desc)], map: "idx_audit_log_created_at")
+  @@index([action], map: "idx_audit_log_action")
+  @@index([entityType, entityId], map: "idx_audit_log_entity")
+  @@index([actorUserId, createdAt(sort: Desc)], map: "idx_audit_log_user_time")
   @@map("audit_log_entries")
 }
 

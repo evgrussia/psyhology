@@ -11,7 +11,7 @@ export class MediaAssetUploadedEvent extends DomainEvent {
     public readonly mediaAssetId: MediaAssetId,
     public readonly mediaType: MediaType,
     public readonly sizeBytes: number,
-    public readonly uploadedByUserId: UserId | null
+    public readonly uploadedByUserId: UserId | null,
   ) {
     super();
   }
@@ -32,7 +32,7 @@ export class MediaAssetDeletedEvent extends DomainEvent {
   constructor(
     public readonly mediaAssetId: MediaAssetId,
     public readonly mediaType: MediaType,
-    public readonly deletedByUserId: UserId | null
+    public readonly deletedByUserId: UserId | null,
   ) {
     super();
   }

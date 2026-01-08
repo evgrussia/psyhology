@@ -27,7 +27,9 @@ describe('FinalizeMediaUploadUseCase', () => {
 
     mockStorageService = {
       generateUploadUrl: vi.fn(),
-      generatePublicUrl: vi.fn().mockReturnValue('https://s3.example.com/public-url'),
+      generatePublicUrl: vi
+        .fn()
+        .mockReturnValue('http://localhost:9000/emotional-balance-media/public-url'),
       objectExists: vi.fn().mockResolvedValue(true),
       deleteObject: vi.fn(),
     };
@@ -38,11 +40,7 @@ describe('FinalizeMediaUploadUseCase', () => {
       unsubscribe: vi.fn(),
     };
 
-    useCase = new FinalizeMediaUploadUseCase(
-      mockRepository,
-      mockStorageService,
-      mockEventBus
-    );
+    useCase = new FinalizeMediaUploadUseCase(mockRepository, mockStorageService, mockEventBus);
   });
 
   describe('валидация', () => {
@@ -50,7 +48,7 @@ describe('FinalizeMediaUploadUseCase', () => {
       await expect(
         useCase.execute({
           mediaAssetId: '',
-        })
+        }),
       ).rejects.toThrow(ValidationError);
     });
   });
@@ -62,7 +60,7 @@ describe('FinalizeMediaUploadUseCase', () => {
       await expect(
         useCase.execute({
           mediaAssetId: 'non-existent-id',
-        })
+        }),
       ).rejects.toThrow(ApplicationError);
     });
 
@@ -87,7 +85,7 @@ describe('FinalizeMediaUploadUseCase', () => {
       await expect(
         useCase.execute({
           mediaAssetId: 'test-id',
-        })
+        }),
       ).rejects.toThrow(ApplicationError);
     });
 
@@ -114,7 +112,7 @@ describe('FinalizeMediaUploadUseCase', () => {
 
       expect(result).toBeDefined();
       expect(result.mediaAssetId).toBe('test-id');
-      expect(result.publicUrl).toBe('https://s3.example.com/public-url');
+      expect(result.publicUrl).toBe('http://localhost:9000/emotional-balance-media/public-url');
 
       // Проверяем что репозиторий был вызван для сохранения
       expect(mockRepository.save).toHaveBeenCalledTimes(1);
@@ -126,7 +124,7 @@ describe('FinalizeMediaUploadUseCase', () => {
         id: MediaAssetId.fromString('test-id'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/test-key'),
-        publicUrl: 'https://s3.example.com/existing-url', // уже загружен
+        publicUrl: 'http://localhost:9000/emotional-balance-media/existing-url', // уже загружен
         mediaType: MediaType.Image,
         mimeType: 'image/jpeg',
         sizeBytes: BigInt(1024),
@@ -142,7 +140,7 @@ describe('FinalizeMediaUploadUseCase', () => {
         mediaAssetId: 'test-id',
       });
 
-      expect(result.publicUrl).toBe('https://s3.example.com/existing-url');
+      expect(result.publicUrl).toBe('http://localhost:9000/emotional-balance-media/existing-url');
       // Не должно быть вызова save, так как уже завершено
       expect(mockRepository.save).not.toHaveBeenCalled();
     });

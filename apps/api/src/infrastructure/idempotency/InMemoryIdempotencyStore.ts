@@ -1,8 +1,5 @@
 import type { IdempotencyKey } from './IdempotencyKey.js';
-import type {
-  IIdempotencyStore,
-  IdempotencyResult,
-} from './IIdempotencyStore.js';
+import type { IIdempotencyStore, IdempotencyResult } from './IIdempotencyStore.js';
 
 type StoredValue = {
   value: unknown;
@@ -19,7 +16,7 @@ export class InMemoryIdempotencyStore implements IIdempotencyStore {
   async checkOrStore<T>(
     key: IdempotencyKey,
     value: T,
-    ttlSeconds = 86400 // 24 часа по умолчанию
+    ttlSeconds = 86400, // 24 часа по умолчанию
   ): Promise<IdempotencyResult<T>> {
     const keyStr = key.toString();
     const existing = this.store.get(keyStr);

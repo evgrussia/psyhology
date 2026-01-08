@@ -31,7 +31,7 @@ export class User {
     private roles: Role[],
     private consents: Consent[],
     private readonly createdAt: Date,
-    private domainEvents: DomainEvent[] = []
+    private domainEvents: DomainEvent[] = [],
   ) {}
 
   // ============================================
@@ -44,7 +44,7 @@ export class User {
   static create(
     email: Email | null,
     phone: PhoneNumber | null,
-    telegramUserId: string | null
+    telegramUserId: string | null,
   ): User {
     // Валидация: хотя бы один способ контакта
     if (!email && !phone && !telegramUserId) {
@@ -61,12 +61,10 @@ export class User {
       UserStatus.Active,
       [Role.Client], // по умолчанию роль Client
       [],
-      new Date()
+      new Date(),
     );
 
-    user.addDomainEvent(
-      new UserCreatedEvent(user.id, email, phone, telegramUserId)
-    );
+    user.addDomainEvent(new UserCreatedEvent(user.id, email, phone, telegramUserId));
 
     return user;
   }
@@ -97,7 +95,7 @@ export class User {
       data.roles,
       data.consents,
       data.createdAt,
-      [] // события не восстанавливаем из БД
+      [], // события не восстанавливаем из БД
     );
   }
 
@@ -110,9 +108,7 @@ export class User {
    */
   grantConsent(consentType: ConsentType, version: string, source: string): void {
     // Проверяем, нет ли уже активного согласия
-    const existingConsent = this.consents.find(
-      (c) => c.type.equals(consentType) && c.isActive()
-    );
+    const existingConsent = this.consents.find((c) => c.type.equals(consentType) && c.isActive());
 
     if (existingConsent) {
       // Согласие уже есть - идемпотентность
@@ -122,23 +118,17 @@ export class User {
     const consent = Consent.create(consentType, version, source);
     this.consents.push(consent);
 
-    this.addDomainEvent(
-      new ConsentGrantedEvent(this.id, consentType, version)
-    );
+    this.addDomainEvent(new ConsentGrantedEvent(this.id, consentType, version));
   }
 
   /**
    * Отозвать согласие
    */
   revokeConsent(consentType: ConsentType): void {
-    const consent = this.consents.find(
-      (c) => c.type.equals(consentType) && c.isActive()
-    );
+    const consent = this.consents.find((c) => c.type.equals(consentType) && c.isActive());
 
     if (!consent) {
-      throw new DomainError(
-        `Active consent of type ${consentType.value} not found`
-      );
+      throw new DomainError(`Active consent of type ${consentType.value} not found`);
     }
 
     consent.revoke();
@@ -229,9 +219,7 @@ export class User {
    * Проверить наличие активного согласия
    */
   hasActiveConsent(consentType: ConsentType): boolean {
-    return this.consents.some(
-      (c) => c.type.equals(consentType) && c.isActive()
-    );
+    return this.consents.some((c) => c.type.equals(consentType) && c.isActive());
   }
 
   /**
@@ -268,9 +256,7 @@ export class User {
     }
 
     if (!this.hasRole(requiredRole)) {
-      throw new UnauthorizedError(
-        `User does not have required role: ${requiredRole.code}`
-      );
+      throw new UnauthorizedError(`User does not have required role: ${requiredRole.code}`);
     }
   }
 

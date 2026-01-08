@@ -5,14 +5,8 @@ import { MediaType } from '../../../domain/media/value-objects/MediaType';
 import { ObjectKey } from '../../../domain/media/value-objects/ObjectKey';
 import { UserId } from '../../../domain/identity/value-objects/Ids';
 import { EntityId } from '../../../domain/shared/value-objects/EntityId';
-import {
-  CreateMediaAssetRequestDto,
-  CreateMediaAssetResponseDto,
-} from '../dto/MediaDtos';
-import {
-  ValidationError,
-  ApplicationError,
-} from '../../shared/errors/ApplicationError';
+import { CreateMediaAssetRequestDto, CreateMediaAssetResponseDto } from '../dto/MediaDtos';
+import { ValidationError, ApplicationError } from '../../shared/errors/ApplicationError';
 import { IEventBus } from '../../../domain/shared/events/IEventBus';
 
 /**
@@ -22,12 +16,12 @@ export class CreateMediaAssetUseCase {
   constructor(
     private readonly mediaAssetRepository: IMediaAssetRepository,
     private readonly storageService: IStorageService,
-    private readonly eventBus: IEventBus
+    private readonly eventBus: IEventBus,
   ) {}
 
   async execute(
     dto: CreateMediaAssetRequestDto,
-    uploadedByUserId: UserId | null
+    uploadedByUserId: UserId | null,
   ): Promise<CreateMediaAssetResponseDto> {
     // 1. Валидация входных данных
     this.validateInput(dto);
@@ -38,7 +32,7 @@ export class CreateMediaAssetUseCase {
       mediaType = MediaType.fromMimeType(dto.mimeType);
     } catch (error) {
       throw new ValidationError(
-        `Unsupported MIME type: ${dto.mimeType}. Supported types: image/*, audio/*, application/pdf`
+        `Unsupported MIME type: ${dto.mimeType}. Supported types: image/*, audio/*, application/pdf`,
       );
     }
 
@@ -49,15 +43,13 @@ export class CreateMediaAssetUseCase {
 
     if (dto.sizeBytes > mediaType.getMaxSizeBytes()) {
       throw new ValidationError(
-        `File size exceeds maximum allowed size for ${mediaType.toString()}: ${mediaType.getMaxSizeBytes()} bytes`
+        `File size exceeds maximum allowed size for ${mediaType.toString()}: ${mediaType.getMaxSizeBytes()} bytes`,
       );
     }
 
     // 4. Создаём MediaAsset (он сам генерирует ID)
     // Используем временный objectKey, затем обновим его
-    const tempKey = ObjectKey.fromString(
-      `temp/${EntityId.generate()}-${dto.filename}`
-    );
+    const tempKey = ObjectKey.fromString(`temp/${EntityId.generate()}-${dto.filename}`);
     const mediaAsset = MediaAsset.create(
       mediaType,
       dto.mimeType,
@@ -65,15 +57,13 @@ export class CreateMediaAssetUseCase {
       tempKey,
       uploadedByUserId,
       dto.title,
-      dto.altText
+      dto.altText,
     );
 
     // 5. Генерируем правильный objectKey с ID медиа-актива
-    const objectKey = ObjectKey.generate(
-      mediaType.toString(),
-      dto.filename,
-      { value: mediaAsset.mediaAssetId.value }
-    );
+    const objectKey = ObjectKey.generate(mediaType.toString(), dto.filename, {
+      value: mediaAsset.mediaAssetId.value,
+    });
 
     // 6. Проверяем, не существует ли уже объект с таким ключом
     const existing = await this.mediaAssetRepository.findByObjectKey(objectKey);
@@ -105,7 +95,7 @@ export class CreateMediaAssetUseCase {
       objectKey,
       mediaType,
       dto.mimeType,
-      3600 // 1 час
+      3600, // 1 час
     );
 
     // 10. Публикуем доменные события

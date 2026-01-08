@@ -20,9 +20,7 @@ export class RbacGuard {
       }
 
       // Проверяем наличие хотя бы одной из требуемых ролей
-      const hasRequiredRole = allowedRoles.some((role) =>
-        request.currentUser!.hasRole(role)
-      );
+      const hasRequiredRole = allowedRoles.some((role) => request.currentUser!.hasRole(role));
 
       if (!hasRequiredRole) {
         return reply.code(403).send({

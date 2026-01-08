@@ -16,7 +16,7 @@ export class AuthController {
   constructor(
     private readonly adminLoginUseCase: AdminLoginUseCase,
     private readonly logoutUseCase: LogoutUseCase,
-    private readonly getCurrentUserUseCase: GetCurrentUserUseCase
+    private readonly getCurrentUserUseCase: GetCurrentUserUseCase,
   ) {}
 
   /**
@@ -64,8 +64,7 @@ export class AuthController {
    */
   async logout(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
-      const sessionId =
-        request.cookies?.sessionId || request.headers['x-session-id'];
+      const sessionId = request.cookies?.sessionId || request.headers['x-session-id'];
 
       if (sessionId) {
         await this.logoutUseCase.execute({ sessionId: sessionId as string });
@@ -83,10 +82,7 @@ export class AuthController {
   /**
    * GET /api/auth/me
    */
-  async getCurrentUser(
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<void> {
+  async getCurrentUser(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       // Используем middleware для установки request.currentUser
       if (request.currentUser) {
@@ -106,8 +102,7 @@ export class AuthController {
       }
 
       // Fallback
-      const sessionId =
-        request.cookies?.sessionId || request.headers['x-session-id'];
+      const sessionId = request.cookies?.sessionId || request.headers['x-session-id'];
 
       if (!sessionId) {
         reply.code(401).send({

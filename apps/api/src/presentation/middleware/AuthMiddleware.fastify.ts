@@ -9,7 +9,7 @@ import { IUserRepository } from '../../../domain/identity/repositories/IUserRepo
 export class AuthMiddleware {
   constructor(
     private readonly sessionRepository: ISessionRepository,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
   ) {}
 
   /**
@@ -19,8 +19,7 @@ export class AuthMiddleware {
     return async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         // 1. Получаем session ID из cookie или заголовка
-        const sessionId =
-          request.cookies?.sessionId || request.headers['x-session-id'];
+        const sessionId = request.cookies?.sessionId || request.headers['x-session-id'];
 
         if (!sessionId) {
           return reply.code(401).send({

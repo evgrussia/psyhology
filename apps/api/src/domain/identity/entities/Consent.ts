@@ -13,14 +13,10 @@ export class Consent {
     readonly version: string,
     readonly source: string,
     readonly grantedAt: Date,
-    private revokedAt: Date | null
+    private revokedAt: Date | null,
   ) {}
 
-  static create(
-    type: ConsentType,
-    version: string,
-    source: string
-  ): Consent {
+  static create(type: ConsentType, version: string, source: string): Consent {
     if (!version || version.trim().length === 0) {
       throw new DomainError('Consent version cannot be empty');
     }
@@ -29,14 +25,7 @@ export class Consent {
       throw new DomainError('Consent source cannot be empty');
     }
 
-    return new Consent(
-      ConsentId.generate(),
-      type,
-      version,
-      source,
-      new Date(),
-      null
-    );
+    return new Consent(ConsentId.generate(), type, version, source, new Date(), null);
   }
 
   /**
@@ -56,7 +45,7 @@ export class Consent {
       data.version,
       data.source,
       data.grantedAt,
-      data.revokedAt
+      data.revokedAt,
     );
   }
 

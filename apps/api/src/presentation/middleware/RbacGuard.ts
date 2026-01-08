@@ -18,9 +18,7 @@ export class RbacGuard {
       }
 
       // Проверяем наличие хотя бы одной из требуемых ролей
-      const hasRequiredRole = allowedRoles.some((role) =>
-        req.currentUser!.hasRole(role)
-      );
+      const hasRequiredRole = allowedRoles.some((role) => req.currentUser!.hasRole(role));
 
       if (!hasRequiredRole) {
         res.status(403).json({ error: 'Forbidden', message: 'Insufficient permissions' });

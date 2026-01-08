@@ -8,7 +8,11 @@ import { MediaAssetId } from '../../../domain/media/value-objects/MediaAssetId';
 import { MediaType } from '../../../domain/media/value-objects/MediaType';
 import { ObjectKey } from '../../../domain/media/value-objects/ObjectKey';
 import { UserId } from '../../../domain/identity/value-objects/Ids';
-import { ValidationError, ApplicationError, AuthorizationError } from '../../shared/errors/ApplicationError';
+import {
+  ValidationError,
+  ApplicationError,
+  AuthorizationError,
+} from '../../shared/errors/ApplicationError';
 
 describe('DeleteMediaAssetUseCase', () => {
   let useCase: DeleteMediaAssetUseCase;
@@ -39,11 +43,7 @@ describe('DeleteMediaAssetUseCase', () => {
       unsubscribe: vi.fn(),
     };
 
-    useCase = new DeleteMediaAssetUseCase(
-      mockRepository,
-      mockStorageService,
-      mockEventBus
-    );
+    useCase = new DeleteMediaAssetUseCase(mockRepository, mockStorageService, mockEventBus);
   });
 
   describe('валидация', () => {
@@ -53,8 +53,8 @@ describe('DeleteMediaAssetUseCase', () => {
           {
             mediaAssetId: '',
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
   });
@@ -68,8 +68,8 @@ describe('DeleteMediaAssetUseCase', () => {
           {
             mediaAssetId: 'non-existent-id',
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ApplicationError);
     });
 
@@ -78,7 +78,7 @@ describe('DeleteMediaAssetUseCase', () => {
         id: MediaAssetId.fromString('test-id'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/test-key'),
-        publicUrl: 'https://s3.example.com/test.jpg',
+        publicUrl: 'http://localhost:9000/emotional-balance-media/test.jpg',
         mediaType: MediaType.Image,
         mimeType: 'image/jpeg',
         sizeBytes: BigInt(1024),
@@ -96,8 +96,8 @@ describe('DeleteMediaAssetUseCase', () => {
           {
             mediaAssetId: 'test-id',
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ApplicationError);
     });
 
@@ -106,7 +106,7 @@ describe('DeleteMediaAssetUseCase', () => {
         id: MediaAssetId.fromString('test-id'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/test-key'),
-        publicUrl: 'https://s3.example.com/test.jpg',
+        publicUrl: 'http://localhost:9000/emotional-balance-media/test.jpg',
         mediaType: MediaType.Image,
         mimeType: 'image/jpeg',
         sizeBytes: BigInt(1024),
@@ -122,7 +122,7 @@ describe('DeleteMediaAssetUseCase', () => {
         {
           mediaAssetId: 'test-id',
         },
-        null
+        null,
       );
 
       expect(mockStorageService.deleteObject).toHaveBeenCalledTimes(1);
@@ -134,7 +134,7 @@ describe('DeleteMediaAssetUseCase', () => {
         id: MediaAssetId.fromString('test-id'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/test-key'),
-        publicUrl: 'https://s3.example.com/test.jpg',
+        publicUrl: 'http://localhost:9000/emotional-balance-media/test.jpg',
         mediaType: MediaType.Image,
         mimeType: 'image/jpeg',
         sizeBytes: BigInt(1024),
@@ -152,7 +152,7 @@ describe('DeleteMediaAssetUseCase', () => {
           mediaAssetId: 'test-id',
           force: true,
         },
-        null
+        null,
       );
 
       expect(mockStorageService.deleteObject).toHaveBeenCalledTimes(1);
@@ -160,14 +160,14 @@ describe('DeleteMediaAssetUseCase', () => {
     });
 
     it('должен выбросить ошибку если пользователь не имеет прав на удаление', async () => {
-      const userId = UserId.fromString('user-123');
-      const otherUserId = UserId.fromString('other-user-456');
+      const userId = UserId.create('user-123');
+      const otherUserId = UserId.create('other-user-456');
 
       const mediaAsset = MediaAsset.reconstitute({
         id: MediaAssetId.fromString('test-id'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/test-key'),
-        publicUrl: 'https://s3.example.com/test.jpg',
+        publicUrl: 'http://localhost:9000/emotional-balance-media/test.jpg',
         mediaType: MediaType.Image,
         mimeType: 'image/jpeg',
         sizeBytes: BigInt(1024),
@@ -184,8 +184,8 @@ describe('DeleteMediaAssetUseCase', () => {
           {
             mediaAssetId: 'test-id',
           },
-          otherUserId // пытается удалить другой пользователь
-        )
+          otherUserId, // пытается удалить другой пользователь
+        ),
       ).rejects.toThrow(AuthorizationError);
     });
   });

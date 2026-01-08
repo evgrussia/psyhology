@@ -3,7 +3,7 @@ import type { IEncryptionService } from './IEncryptionService.js';
 /**
  * Заглушка для EncryptionService.
  * Реальная реализация будет добавлена в FEAT-SEC-02.
- * 
+ *
  * В production должна использовать AES-256-GCM или аналогичный алгоритм.
  */
 export class EncryptionService implements IEncryptionService {
@@ -12,8 +12,7 @@ export class EncryptionService implements IEncryptionService {
    */
   async encrypt(plaintext: string): Promise<string> {
     throw new Error(
-      'EncryptionService is not implemented yet. ' +
-        'Will be implemented in FEAT-SEC-02.'
+      'EncryptionService is not implemented yet. ' + 'Will be implemented in FEAT-SEC-02.',
     );
   }
 
@@ -22,8 +21,7 @@ export class EncryptionService implements IEncryptionService {
    */
   async decrypt(ciphertext: string): Promise<string> {
     throw new Error(
-      'EncryptionService is not implemented yet. ' +
-        'Will be implemented in FEAT-SEC-02.'
+      'EncryptionService is not implemented yet. ' + 'Will be implemented in FEAT-SEC-02.',
     );
   }
 

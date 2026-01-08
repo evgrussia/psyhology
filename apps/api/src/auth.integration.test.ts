@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import { FastifyInstance } from 'fastify';
 import { PrismaClient } from '@prisma/client';
-import { createApp } from '../src/presentation/http/server';
+import { createApp } from './presentation/http/server';
 
 describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
   let app: FastifyInstance;
@@ -68,7 +68,7 @@ describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
       await prisma.$executeRawUnsafe(
         `UPDATE users SET password_hash = $1 WHERE id = $2`,
         passwordHash,
-        owner.id
+        owner.id,
       );
 
       // 2. Пробуем войти с правильным паролем
@@ -140,7 +140,7 @@ describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
       await prisma.$executeRawUnsafe(
         `UPDATE users SET password_hash = $1 WHERE id = $2`,
         passwordHash,
-        owner.id
+        owner.id,
       );
 
       // Пробуем войти с неверным паролем
@@ -239,7 +239,7 @@ describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
             `INSERT INTO sessions (id, user_id, created_at, expires_at)
              VALUES ($1, $2, NOW(), NOW() + INTERVAL '24 hours')`,
             tempSessionId,
-            owner.id
+            owner.id,
           );
           sessionId = tempSessionId;
         }
@@ -297,7 +297,7 @@ describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
       // Проверяем что сессия удалена
       const session = await prisma.$queryRawUnsafe<any[]>(
         'SELECT * FROM sessions WHERE id = $1',
-        sessionId
+        sessionId,
       );
       expect(session.length).toBe(0);
     });
@@ -316,7 +316,7 @@ describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
           `INSERT INTO sessions (id, user_id, created_at, expires_at)
            VALUES ($1, $2, NOW(), NOW() + INTERVAL '24 hours')`,
           ownerSessionId,
-          owner.id
+          owner.id,
         );
 
         // Проверяем доступ к /api/auth/me
@@ -354,7 +354,7 @@ describe('FEAT-PLT-03: Authentication & RBAC Integration Tests', () => {
         `INSERT INTO sessions (id, user_id, created_at, expires_at)
          VALUES ($1, $2, NOW(), NOW() + INTERVAL '24 hours')`,
         assistantSessionId,
-        assistant.id
+        assistant.id,
       );
 
       // Assistant может получить свои данные

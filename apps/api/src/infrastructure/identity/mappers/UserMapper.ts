@@ -24,21 +24,20 @@ export class UserMapper {
     const status = UserStatus.fromString(record.status);
 
     // Маппим роли
-    const roles = record.userRoles?.map((ur: any) =>
-      Role.fromCode(ur.roleCode)
-    ) || [];
+    const roles = record.userRoles?.map((ur: any) => Role.fromCode(ur.roleCode)) || [];
 
     // Маппим согласия
-    const consents = record.consents?.map((c: any) =>
-      Consent.reconstitute({
-        id: ConsentId.create(c.id),
-        type: ConsentType.fromString(c.consentType),
-        version: c.version,
-        source: c.source,
-        grantedAt: c.grantedAt,
-        revokedAt: c.revokedAt,
-      })
-    ) || [];
+    const consents =
+      record.consents?.map((c: any) =>
+        Consent.reconstitute({
+          id: ConsentId.create(c.id),
+          type: ConsentType.fromString(c.consentType),
+          version: c.version,
+          source: c.source,
+          grantedAt: c.grantedAt,
+          revokedAt: c.revokedAt,
+        }),
+      ) || [];
 
     return User.reconstitute({
       id: userId,

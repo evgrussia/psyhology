@@ -5,17 +5,20 @@
 ## Быстрый старт (локальная разработка)
 
 1. Поднять PostgreSQL через docker-compose:
+
 ```bash
 cd ../../..  # в корень проекта
 docker-compose up -d postgres
 ```
 
 2. Настроить DATABASE_URL в `.env`:
+
 ```bash
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/emotional_balance?schema=public"
 ```
 
 3. Создать первую миграцию (если её ещё нет):
+
 ```bash
 cd apps/api
 # Linux/Mac:
@@ -27,12 +30,14 @@ npm run migrate:dev -- --name init
 ```
 
 4. Применить миграции и seed-данные:
+
 ```bash
 npm run migrate:up
 npm run seed
 ```
 
 5. Сгенерировать Prisma Client:
+
 ```bash
 npm run prisma:generate
 ```
@@ -68,6 +73,7 @@ npm run migrate:status
 ## Seed-данные
 
 Seed-файл (`prisma/seed.ts`) создаёт базовые данные для разработки:
+
 - **Роли**: `owner`, `assistant`, `editor`, `client`
 - **Темы**: `anxiety`, `burnout`, `relationships`, `boundaries`, `selfesteem`
 
@@ -84,6 +90,7 @@ Seed-данные идемпотентны (используют `upsert`), их
 ## Структура схемы
 
 Схема БД (`prisma/schema.prisma`) включает все домены Release 1:
+
 - **Identity & Access**: users, roles, user_roles, consents
 - **Content**: content_items, topics, tags, media_assets, curated_collections, glossary_terms
 - **Interactive**: interactive_definitions, interactive_runs
@@ -106,6 +113,7 @@ Seed-данные идемпотентны (используют `upsert`), их
 `src/infrastructure/persistence/migrations.test.ts`
 
 Запуск тестов:
+
 ```bash
 npm test
 ```

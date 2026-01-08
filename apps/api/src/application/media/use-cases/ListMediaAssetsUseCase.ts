@@ -10,20 +10,17 @@ import { ValidationError } from '../../shared/errors/ApplicationError';
  * Use Case: Получить список медиа-активов
  */
 export class ListMediaAssetsUseCase {
-  constructor(
-    private readonly mediaAssetRepository: IMediaAssetRepository
-  ) {}
+  constructor(private readonly mediaAssetRepository: IMediaAssetRepository) {}
 
-  async execute(
-    dto: ListMediaAssetsRequestDto
-  ): Promise<ListMediaAssetsResponseDto> {
+  async execute(dto: ListMediaAssetsRequestDto): Promise<ListMediaAssetsResponseDto> {
     // 1. Валидация
-    const limit = dto.limit || 50;
-    const offset = dto.offset || 0;
-
-    if (limit < 1 || limit > 100) {
+    // Проверяем limit до применения дефолта
+    if (dto.limit !== undefined && (dto.limit < 1 || dto.limit > 100)) {
       throw new ValidationError('Limit must be between 1 and 100');
     }
+
+    const limit = dto.limit || 50;
+    const offset = dto.offset || 0;
 
     if (offset < 0) {
       throw new ValidationError('Offset must be non-negative');

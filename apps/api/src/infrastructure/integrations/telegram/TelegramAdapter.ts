@@ -11,14 +11,11 @@ export class TelegramAdapter implements ITelegramBotService {
     options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
       replyMarkup?: unknown;
-    }
+    },
   ): Promise<number> {
     // Заглушка: возвращает случайный ID
     // В production будет вызывать Telegram Bot API
-    console.warn(
-      'TelegramAdapter.sendMessage is a stub. ' +
-        'Will be implemented in FEAT-TG-01.'
-    );
+    console.warn('TelegramAdapter.sendMessage is a stub. ' + 'Will be implemented in FEAT-TG-01.');
     return Math.floor(Math.random() * 1000000);
   }
 
@@ -27,26 +24,18 @@ export class TelegramAdapter implements ITelegramBotService {
     text: string,
     options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
-    }
+    },
   ): Promise<number> {
     // Заглушка
     console.warn(
-      'TelegramAdapter.sendChannelMessage is a stub. ' +
-        'Will be implemented in FEAT-TG-01.'
+      'TelegramAdapter.sendChannelMessage is a stub. ' + 'Will be implemented in FEAT-TG-01.',
     );
     return Math.floor(Math.random() * 1000000);
   }
 
-  async editMessage(
-    chatId: string | number,
-    messageId: number,
-    text: string
-  ): Promise<void> {
+  async editMessage(chatId: string | number, messageId: number, text: string): Promise<void> {
     // Заглушка
-    console.warn(
-      'TelegramAdapter.editMessage is a stub. ' +
-        'Will be implemented in FEAT-TG-01.'
-    );
+    console.warn('TelegramAdapter.editMessage is a stub. ' + 'Will be implemented in FEAT-TG-01.');
   }
 
   async getUserInfo(userId: number): Promise<{
@@ -56,10 +45,7 @@ export class TelegramAdapter implements ITelegramBotService {
     lastName?: string;
   }> {
     // Заглушка
-    console.warn(
-      'TelegramAdapter.getUserInfo is a stub. ' +
-        'Will be implemented in FEAT-TG-01.'
-    );
+    console.warn('TelegramAdapter.getUserInfo is a stub. ' + 'Will be implemented in FEAT-TG-01.');
     return {
       id: userId,
     };

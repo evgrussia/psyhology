@@ -26,9 +26,7 @@ export class MediaAssetMapper {
       sizeBytes: record.sizeBytes,
       title: record.title,
       altText: record.altText,
-      uploadedByUserId: record.uploadedByUserId
-        ? UserId.fromString(record.uploadedByUserId)
-        : null,
+      uploadedByUserId: record.uploadedByUserId ? UserId.fromString(record.uploadedByUserId) : null,
       createdAt: record.createdAt,
     });
   }

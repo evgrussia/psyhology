@@ -27,8 +27,10 @@ describe('CreateMediaAssetUseCase', () => {
     };
 
     mockStorageService = {
-      generateUploadUrl: vi.fn().mockResolvedValue('https://s3.example.com/upload-url'),
-      generatePublicUrl: vi.fn().mockReturnValue('https://s3.example.com/public-url'),
+      generateUploadUrl: vi.fn().mockResolvedValue('http://localhost:9000/presigned/upload-url'),
+      generatePublicUrl: vi
+        .fn()
+        .mockReturnValue('http://localhost:9000/emotional-balance-media/public-url'),
       objectExists: vi.fn(),
       deleteObject: vi.fn(),
     };
@@ -39,11 +41,7 @@ describe('CreateMediaAssetUseCase', () => {
       unsubscribe: vi.fn(),
     };
 
-    useCase = new CreateMediaAssetUseCase(
-      mockRepository,
-      mockStorageService,
-      mockEventBus
-    );
+    useCase = new CreateMediaAssetUseCase(mockRepository, mockStorageService, mockEventBus);
   });
 
   describe('валидация входных данных', () => {
@@ -55,8 +53,8 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: 'image/jpeg',
             sizeBytes: 1024,
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -68,8 +66,8 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: '',
             sizeBytes: 1024,
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -81,8 +79,8 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: 'image/jpeg',
             sizeBytes: 0,
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
   });
@@ -96,8 +94,8 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: 'text/plain',
             sizeBytes: 1024,
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -108,7 +106,7 @@ describe('CreateMediaAssetUseCase', () => {
           mimeType: 'image/jpeg',
           sizeBytes: 1024,
         },
-        null
+        null,
       );
 
       expect(result).toBeDefined();
@@ -123,7 +121,7 @@ describe('CreateMediaAssetUseCase', () => {
           mimeType: 'audio/mpeg',
           sizeBytes: 1024,
         },
-        null
+        null,
       );
 
       expect(result).toBeDefined();
@@ -136,7 +134,7 @@ describe('CreateMediaAssetUseCase', () => {
           mimeType: 'application/pdf',
           sizeBytes: 1024,
         },
-        null
+        null,
       );
 
       expect(result).toBeDefined();
@@ -152,8 +150,8 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: 'image/jpeg',
             sizeBytes: 11 * 1024 * 1024, // 11 MB > 10 MB лимит
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -165,8 +163,8 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: 'audio/mpeg',
             sizeBytes: 51 * 1024 * 1024, // 51 MB > 50 MB лимит
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -177,7 +175,7 @@ describe('CreateMediaAssetUseCase', () => {
           mimeType: 'image/jpeg',
           sizeBytes: 5 * 1024 * 1024, // 5 MB < 10 MB лимит
         },
-        null
+        null,
       );
 
       expect(result).toBeDefined();
@@ -194,12 +192,12 @@ describe('CreateMediaAssetUseCase', () => {
           title: 'Test Image',
           altText: 'Test alt text',
         },
-        null
+        null,
       );
 
       expect(result).toBeDefined();
       expect(result.mediaAssetId).toBeDefined();
-      expect(result.uploadUrl).toBe('https://s3.example.com/upload-url');
+      expect(result.uploadUrl).toBe('http://localhost:9000/presigned/upload-url');
       expect(result.expiresAt).toBeInstanceOf(Date);
 
       // Проверяем что репозиторий был вызван
@@ -232,15 +230,15 @@ describe('CreateMediaAssetUseCase', () => {
             mimeType: 'image/jpeg',
             sizeBytes: 1024,
           },
-          null
-        )
+          null,
+        ),
       ).rejects.toThrow(ApplicationError);
     });
   });
 
   describe('с userId', () => {
     it('должен создать медиа-актив с userId', async () => {
-      const userId = UserId.fromString('user-123');
+      const userId = UserId.create('user-123');
 
       const result = await useCase.execute(
         {
@@ -248,7 +246,7 @@ describe('CreateMediaAssetUseCase', () => {
           mimeType: 'image/jpeg',
           sizeBytes: 1024,
         },
-        userId
+        userId,
       );
 
       expect(result).toBeDefined();

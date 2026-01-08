@@ -16,7 +16,7 @@ export interface ITelegramBotService {
     options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
       replyMarkup?: unknown;
-    }
+    },
   ): Promise<number>;
 
   /**
@@ -31,7 +31,7 @@ export interface ITelegramBotService {
     text: string,
     options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
-    }
+    },
   ): Promise<number>;
 
   /**
@@ -40,11 +40,7 @@ export interface ITelegramBotService {
    * @param messageId ID сообщения
    * @param text новый текст
    */
-  editMessage(
-    chatId: string | number,
-    messageId: number,
-    text: string
-  ): Promise<void>;
+  editMessage(chatId: string | number, messageId: number, text: string): Promise<void>;
 
   /**
    * Получает информацию о пользователе

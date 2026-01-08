@@ -19,17 +19,14 @@ export class MediaController {
     private readonly createMediaAssetUseCase: CreateMediaAssetUseCase,
     private readonly finalizeMediaUploadUseCase: FinalizeMediaUploadUseCase,
     private readonly deleteMediaAssetUseCase: DeleteMediaAssetUseCase,
-    private readonly listMediaAssetsUseCase: ListMediaAssetsUseCase
+    private readonly listMediaAssetsUseCase: ListMediaAssetsUseCase,
   ) {}
 
   /**
    * POST /api/admin/media/init
    * Создать медиа-актив и получить pre-signed URL для загрузки
    */
-  async initUpload(
-    request: FastifyRequest,
-    reply: FastifyReply
-  ): Promise<void> {
+  async initUpload(request: FastifyRequest, reply: FastifyReply): Promise<void> {
     try {
       const body = request.body as {
         filename?: string;
@@ -51,7 +48,7 @@ export class MediaController {
           title: body.title,
           altText: body.altText,
         },
-        uploadedByUserId
+        uploadedByUserId,
       );
 
       reply.code(200).send({
@@ -69,7 +66,7 @@ export class MediaController {
    */
   async finalizeUpload(
     request: FastifyRequest<{ Params: { id: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ): Promise<void> {
     try {
       const { id } = request.params;
@@ -93,7 +90,7 @@ export class MediaController {
    */
   async deleteMedia(
     request: FastifyRequest<{ Params: { id: string }; Querystring: { force?: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ): Promise<void> {
     try {
       const { id } = request.params;
@@ -103,12 +100,21 @@ export class MediaController {
         ? UserId.fromString(request.currentUser.userId.value)
         : null;
 
+      const deletedByUserRole = request.currentUser?.userRoles[0] || null;
+
+      // Получаем IP и User-Agent для audit log
+      const ipAddress = request.ip || null;
+      const userAgent = request.headers['user-agent'] || null;
+
       await this.deleteMediaAssetUseCase.execute(
         {
           mediaAssetId: id,
           force,
         },
-        deletedByUserId
+        deletedByUserId,
+        deletedByUserRole,
+        ipAddress,
+        userAgent,
       );
 
       reply.code(204).send();
@@ -130,7 +136,7 @@ export class MediaController {
         offset?: string;
       };
     }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ): Promise<void> {
     try {
       const query = request.query;

@@ -8,11 +8,10 @@ import { AuthMiddleware } from '../middleware/AuthMiddleware.fastify';
  */
 export async function registerMediaRoutes(
   fastify: FastifyInstance,
-  opts: FastifyPluginOptions
+  opts: FastifyPluginOptions,
 ): Promise<void> {
   // Получаем зависимости из декораторов
-  const mediaController = (fastify as any)
-    .mediaController as MediaController;
+  const mediaController = (fastify as any).mediaController as MediaController;
   const authMiddleware = (fastify as any).authMiddleware as AuthMiddleware;
 
   /**
@@ -23,14 +22,11 @@ export async function registerMediaRoutes(
   fastify.post(
     '/init',
     {
-      preHandler: [
-        authMiddleware.authenticate(),
-        RbacGuard.requireContentManager(),
-      ],
+      preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
     async (request, reply) => {
       await mediaController.initUpload(request, reply);
-    }
+    },
   );
 
   /**
@@ -41,17 +37,11 @@ export async function registerMediaRoutes(
   fastify.post(
     '/:id/finalize',
     {
-      preHandler: [
-        authMiddleware.authenticate(),
-        RbacGuard.requireContentManager(),
-      ],
+      preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
     async (request, reply) => {
-      await mediaController.finalizeUpload(
-        request as any,
-        reply
-      );
-    }
+      await mediaController.finalizeUpload(request as any, reply);
+    },
   );
 
   /**
@@ -62,14 +52,11 @@ export async function registerMediaRoutes(
   fastify.delete(
     '/:id',
     {
-      preHandler: [
-        authMiddleware.authenticate(),
-        RbacGuard.requireContentManager(),
-      ],
+      preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
     async (request, reply) => {
       await mediaController.deleteMedia(request as any, reply);
-    }
+    },
   );
 
   /**
@@ -80,13 +67,10 @@ export async function registerMediaRoutes(
   fastify.get(
     '/',
     {
-      preHandler: [
-        authMiddleware.authenticate(),
-        RbacGuard.requireContentManager(),
-      ],
+      preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
     async (request, reply) => {
       await mediaController.listMedia(request as any, reply);
-    }
+    },
   );
 }

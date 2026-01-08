@@ -20,8 +20,7 @@ export class YooKassaAdapter implements IPaymentProviderService {
     // Заглушка: возвращает тестовые данные
     // В production будет вызывать ЮKassa API
     console.warn(
-      'YooKassaAdapter.createPaymentIntent is a stub. ' +
-        'Will be implemented in FEAT-PAY-01.'
+      'YooKassaAdapter.createPaymentIntent is a stub. ' + 'Will be implemented in FEAT-PAY-01.',
     );
     return {
       paymentId: `stub_payment_${crypto.randomUUID()}`,
@@ -36,8 +35,7 @@ export class YooKassaAdapter implements IPaymentProviderService {
   }> {
     // Заглушка
     console.warn(
-      'YooKassaAdapter.getPaymentStatus is a stub. ' +
-        'Will be implemented in FEAT-PAY-01.'
+      'YooKassaAdapter.getPaymentStatus is a stub. ' + 'Will be implemented in FEAT-PAY-01.',
     );
     return {
       status: 'pending',
@@ -48,7 +46,7 @@ export class YooKassaAdapter implements IPaymentProviderService {
 
   async handleWebhook(
     payload: unknown,
-    signature: string
+    signature: string,
   ): Promise<{
     event: string;
     paymentId: string;
@@ -56,8 +54,7 @@ export class YooKassaAdapter implements IPaymentProviderService {
   }> {
     // Заглушка
     console.warn(
-      'YooKassaAdapter.handleWebhook is a stub. ' +
-        'Will be implemented in FEAT-PAY-01.'
+      'YooKassaAdapter.handleWebhook is a stub. ' + 'Will be implemented in FEAT-PAY-01.',
     );
     throw new Error('Webhook handling not implemented');
   }

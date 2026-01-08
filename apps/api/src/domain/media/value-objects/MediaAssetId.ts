@@ -8,11 +8,14 @@ export class MediaAssetId {
   private constructor(private readonly id: EntityId) {}
 
   static generate(): MediaAssetId {
-    return new MediaAssetId(EntityId.generate());
+    const id = new (class extends EntityId {})(EntityId.generate());
+    return new MediaAssetId(id);
   }
 
   static fromString(value: string): MediaAssetId {
-    return new MediaAssetId(EntityId.fromString(value));
+    // EntityId не имеет fromString, создаём напрямую через наследование
+    const id = new (class extends EntityId {})(value);
+    return new MediaAssetId(id);
   }
 
   equals(other: MediaAssetId): boolean {

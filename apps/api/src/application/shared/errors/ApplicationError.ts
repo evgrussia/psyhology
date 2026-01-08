@@ -35,7 +35,7 @@ export class AuthorizationError extends ApplicationError {
 export class ValidationError extends ApplicationError {
   constructor(
     message: string,
-    public readonly errors?: Record<string, string[]>
+    public readonly errors?: Record<string, string[]>,
   ) {
     super(message);
     this.name = 'ValidationError';

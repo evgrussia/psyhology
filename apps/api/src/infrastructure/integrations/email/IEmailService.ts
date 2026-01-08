@@ -26,6 +26,6 @@ export interface IEmailService {
   sendTemplate(
     templateId: string,
     to: string | string[],
-    variables: Record<string, string>
+    variables: Record<string, string>,
   ): Promise<string | void>;
 }

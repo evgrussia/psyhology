@@ -22,7 +22,7 @@ declare global {
 export class AuthMiddleware {
   constructor(
     private readonly sessionRepository: ISessionRepository,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
   ) {}
 
   /**
@@ -32,8 +32,7 @@ export class AuthMiddleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         // 1. Получаем session ID из cookie или заголовка
-        const sessionId =
-          req.cookies?.sessionId || req.headers['x-session-id'];
+        const sessionId = req.cookies?.sessionId || req.headers['x-session-id'];
 
         if (!sessionId) {
           res.status(401).json({ error: 'Unauthorized', message: 'Session ID required' });

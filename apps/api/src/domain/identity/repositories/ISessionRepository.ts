@@ -10,7 +10,7 @@ export class Session {
     readonly createdAt: Date,
     readonly expiresAt: Date,
     readonly ipAddress: string | null,
-    readonly userAgent: string | null
+    readonly userAgent: string | null,
   ) {}
 
   isExpired(): boolean {
@@ -34,7 +34,7 @@ export interface ISessionRepository {
     userId: UserId,
     ttlSeconds: number,
     ipAddress: string | null,
-    userAgent: string | null
+    userAgent: string | null,
   ): Promise<Session>;
 
   /**

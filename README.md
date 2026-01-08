@@ -23,7 +23,7 @@
 npm install
 ```
 
-2. Поднять инфраструктуру (Postgres):
+2. Поднять инфраструктуру (Postgres + локальный S3/MinIO):
 
 ```bash
 npm run dev:infra
@@ -31,9 +31,9 @@ npm run dev:infra
 
 3. Подготовить переменные окружения:
 
-- Скопируйте `.env.example` → `.env` (опционально)
-- Скопируйте `apps/api/.env.example` → `apps/api/.env`
-- Скопируйте `apps/bot/.env.example` → `apps/bot/.env` (бот можно не запускать без токена)
+- Скопируйте `env.example` → `.env` (опционально)
+- Скопируйте `apps/api/env.example` → `apps/api/.env` (при необходимости)
+- Скопируйте `apps/bot/env.example` → `apps/bot/.env` (бот можно не запускать без токена)
 
 4. Запуск сервисов:
 

@@ -29,7 +29,7 @@ describe('ListMediaAssetsUseCase', () => {
       await expect(
         useCase.execute({
           limit: 0,
-        })
+        }),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -37,7 +37,7 @@ describe('ListMediaAssetsUseCase', () => {
       await expect(
         useCase.execute({
           limit: 101,
-        })
+        }),
       ).rejects.toThrow(ValidationError);
     });
 
@@ -45,7 +45,7 @@ describe('ListMediaAssetsUseCase', () => {
       await expect(
         useCase.execute({
           offset: -1,
-        })
+        }),
       ).rejects.toThrow(ValidationError);
     });
   });
@@ -65,7 +65,7 @@ describe('ListMediaAssetsUseCase', () => {
         id: MediaAssetId.fromString('id-1'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/key-1'),
-        publicUrl: 'https://s3.example.com/image1.jpg',
+        publicUrl: 'http://localhost:9000/emotional-balance-media/image1.jpg',
         mediaType: MediaType.Image,
         mimeType: 'image/jpeg',
         sizeBytes: BigInt(1024),
@@ -79,7 +79,7 @@ describe('ListMediaAssetsUseCase', () => {
         id: MediaAssetId.fromString('id-2'),
         storageProvider: 's3',
         objectKey: ObjectKey.fromString('image/2026/01/key-2'),
-        publicUrl: 'https://s3.example.com/image2.jpg',
+        publicUrl: 'http://localhost:9000/emotional-balance-media/image2.jpg',
         mediaType: MediaType.Image,
         mimeType: 'image/png',
         sizeBytes: BigInt(2048),
@@ -95,7 +95,9 @@ describe('ListMediaAssetsUseCase', () => {
 
       expect(result.items).toHaveLength(2);
       expect(result.items[0].id).toBe('id-1');
-      expect(result.items[0].publicUrl).toBe('https://s3.example.com/image1.jpg');
+      expect(result.items[0].publicUrl).toBe(
+        'http://localhost:9000/emotional-balance-media/image1.jpg',
+      );
       expect(result.items[0].mediaType).toBe('image');
       expect(result.items[0].mimeType).toBe('image/jpeg');
       expect(result.items[0].sizeBytes).toBe(1024);
@@ -111,7 +113,7 @@ describe('ListMediaAssetsUseCase', () => {
       expect(mockRepository.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
           mediaType: 'image',
-        })
+        }),
       );
     });
 
@@ -123,7 +125,7 @@ describe('ListMediaAssetsUseCase', () => {
       expect(mockRepository.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
           uploadedByUserId: 'user-123',
-        })
+        }),
       );
     });
 
@@ -137,7 +139,7 @@ describe('ListMediaAssetsUseCase', () => {
         expect.objectContaining({
           limit: 20,
           offset: 10,
-        })
+        }),
       );
     });
   });

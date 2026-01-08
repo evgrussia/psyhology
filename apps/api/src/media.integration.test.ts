@@ -4,7 +4,9 @@ import { PrismaClient } from '@prisma/client';
 import { createApp } from './presentation/http/server';
 import bcrypt from 'bcrypt';
 
-describe('FEAT-PLT-04: Media Upload Integration Tests', () => {
+const shouldSkip = !process.env.DATABASE_URL;
+
+describe.skipIf(shouldSkip)('FEAT-PLT-04: Media Upload Integration Tests', () => {
   let app: FastifyInstance;
   let prisma: PrismaClient;
   let sessionId: string;
@@ -71,7 +73,7 @@ describe('FEAT-PLT-04: Media Upload Integration Tests', () => {
     await prisma.$executeRawUnsafe(
       `UPDATE users SET password_hash = $1 WHERE id = $2`,
       passwordHash,
-      owner.id
+      owner.id,
     );
 
     // Логинимся
@@ -462,7 +464,7 @@ describe('FEAT-PLT-04: Media Upload Integration Tests', () => {
       await prisma.$executeRawUnsafe(
         `UPDATE users SET password_hash = $1 WHERE id = $2`,
         passwordHash,
-        client.id
+        client.id,
       );
 
       // Логинимся как client

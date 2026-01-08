@@ -13,7 +13,7 @@ export class UserCreatedEvent extends DomainEvent {
     readonly userId: UserId,
     readonly email: Email | null,
     readonly phone: PhoneNumber | null,
-    readonly telegramUserId: string | null
+    readonly telegramUserId: string | null,
   ) {
     super();
   }
@@ -34,7 +34,7 @@ export class ConsentGrantedEvent extends DomainEvent {
   constructor(
     readonly userId: UserId,
     readonly consentType: ConsentType,
-    readonly version: string
+    readonly version: string,
   ) {
     super();
   }
@@ -54,7 +54,7 @@ export class ConsentGrantedEvent extends DomainEvent {
 export class ConsentRevokedEvent extends DomainEvent {
   constructor(
     readonly userId: UserId,
-    readonly consentType: ConsentType
+    readonly consentType: ConsentType,
   ) {
     super();
   }
@@ -74,7 +74,7 @@ export class ConsentRevokedEvent extends DomainEvent {
 export class RoleAssignedEvent extends DomainEvent {
   constructor(
     readonly userId: UserId,
-    readonly role: Role
+    readonly role: Role,
   ) {
     super();
   }
@@ -94,7 +94,7 @@ export class RoleAssignedEvent extends DomainEvent {
 export class UserBlockedEvent extends DomainEvent {
   constructor(
     readonly userId: UserId,
-    readonly reason: string
+    readonly reason: string,
   ) {
     super();
   }
@@ -114,7 +114,7 @@ export class UserBlockedEvent extends DomainEvent {
 export class AdminLoggedInEvent extends DomainEvent {
   constructor(
     readonly userId: UserId,
-    readonly role: Role
+    readonly role: Role,
   ) {
     super();
   }

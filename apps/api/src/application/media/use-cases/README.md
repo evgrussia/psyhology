@@ -29,11 +29,13 @@ npm test
 ```
 
 Для запуска только unit тестов:
+
 ```bash
 npm test -- use-cases
 ```
 
 Для запуска только integration тестов:
+
 ```bash
 npm test -- integration
 ```
@@ -41,6 +43,7 @@ npm test -- integration
 ## Требования
 
 Для интеграционных тестов требуется:
+
 - База данных PostgreSQL (настроена через DATABASE_URL)
 - Тестовый пользователь с ролью owner (создаётся автоматически в тестах)
 

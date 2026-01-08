@@ -4,10 +4,7 @@ import { ObjectKey } from '../value-objects/ObjectKey';
 import { UserId } from '../../identity/value-objects/Ids';
 import { DomainError } from '../../shared/errors/DomainError';
 import { DomainEvent } from '../../shared/events/DomainEvent';
-import {
-  MediaAssetUploadedEvent,
-  MediaAssetDeletedEvent,
-} from '../events/MediaEvents';
+import { MediaAssetUploadedEvent, MediaAssetDeletedEvent } from '../events/MediaEvents';
 
 /**
  * MediaAsset Aggregate Root
@@ -26,7 +23,7 @@ export class MediaAsset {
     private altText: string | null,
     private readonly uploadedByUserId: UserId | null,
     private readonly createdAt: Date,
-    private domainEvents: DomainEvent[] = []
+    private domainEvents: DomainEvent[] = [],
   ) {}
 
   // ============================================
@@ -43,7 +40,7 @@ export class MediaAsset {
     objectKey: ObjectKey,
     uploadedByUserId: UserId | null,
     title?: string | null,
-    altText?: string | null
+    altText?: string | null,
   ): MediaAsset {
     // Валидация размера
     if (sizeBytes <= 0) {
@@ -52,7 +49,7 @@ export class MediaAsset {
 
     if (sizeBytes > mediaType.getMaxSizeBytes()) {
       throw new DomainError(
-        `File size exceeds maximum allowed size for ${mediaType.toString()}: ${mediaType.getMaxSizeBytes()} bytes`
+        `File size exceeds maximum allowed size for ${mediaType.toString()}: ${mediaType.getMaxSizeBytes()} bytes`,
       );
     }
 
@@ -61,7 +58,7 @@ export class MediaAsset {
       const detectedType = MediaType.fromMimeType(mimeType);
       if (!detectedType.equals(mediaType)) {
         throw new DomainError(
-          `MIME type ${mimeType} does not match media type ${mediaType.toString()}`
+          `MIME type ${mimeType} does not match media type ${mediaType.toString()}`,
         );
       }
     } catch (error) {
@@ -85,7 +82,7 @@ export class MediaAsset {
       title || null,
       altText || null,
       uploadedByUserId,
-      new Date()
+      new Date(),
     );
 
     return asset;
@@ -119,7 +116,7 @@ export class MediaAsset {
       data.altText,
       data.uploadedByUserId,
       data.createdAt,
-      [] // события не восстанавливаем из БД
+      [], // события не восстанавливаем из БД
     );
   }
 
@@ -146,8 +143,8 @@ export class MediaAsset {
         this.id,
         this.mediaType,
         Number(this.sizeBytes),
-        this.uploadedByUserId
-      )
+        this.uploadedByUserId,
+      ),
     );
   }
 
@@ -168,9 +165,7 @@ export class MediaAsset {
    * Пометить для удаления
    */
   markForDeletion(): void {
-    this.addDomainEvent(
-      new MediaAssetDeletedEvent(this.id, this.mediaType, this.uploadedByUserId)
-    );
+    this.addDomainEvent(new MediaAssetDeletedEvent(this.id, this.mediaType, this.uploadedByUserId));
   }
 
   // ============================================

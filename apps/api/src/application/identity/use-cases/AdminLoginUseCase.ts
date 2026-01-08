@@ -4,11 +4,7 @@ import { IPasswordHasher } from '../services/IPasswordHasher';
 import { IEventBus } from '../../../domain/shared/events/IEventBus';
 import { Email } from '../../../domain/identity/value-objects/Email';
 import { Role } from '../../../domain/identity/value-objects/Role';
-import {
-  AdminLoginRequestDto,
-  AuthResponseDto,
-  UserDto,
-} from '../dto/AuthDtos';
+import { AdminLoginRequestDto, AuthResponseDto, UserDto } from '../dto/AuthDtos';
 import {
   AuthenticationError,
   AuthorizationError,
@@ -24,7 +20,7 @@ export class AdminLoginUseCase {
     private readonly userRepository: IUserRepository,
     private readonly sessionRepository: ISessionRepository,
     private readonly passwordHasher: IPasswordHasher,
-    private readonly eventBus: IEventBus
+    private readonly eventBus: IEventBus,
   ) {}
 
   async execute(dto: AdminLoginRequestDto): Promise<AuthResponseDto> {
@@ -70,10 +66,7 @@ export class AdminLoginUseCase {
     }
 
     // 7. Проверяем пароль
-    const isPasswordValid = await this.passwordHasher.verify(
-      dto.password,
-      passwordHash
-    );
+    const isPasswordValid = await this.passwordHasher.verify(dto.password, passwordHash);
 
     if (!isPasswordValid) {
       throw new AuthenticationError('Invalid email or password');
@@ -84,7 +77,7 @@ export class AdminLoginUseCase {
       user.userId,
       24 * 60 * 60, // 24 hours in seconds
       dto.ipAddress || null,
-      dto.userAgent || null
+      dto.userAgent || null,
     );
 
     // 9. Публикуем событие входа админа

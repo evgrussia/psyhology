@@ -17,7 +17,7 @@ export class PrismaSessionRepository implements ISessionRepository {
     userId: UserId,
     ttlSeconds: number,
     ipAddress: string | null,
-    userAgent: string | null
+    userAgent: string | null,
   ): Promise<Session> {
     const sessionId = this.generateSessionId();
     const createdAt = new Date();
@@ -34,14 +34,7 @@ export class PrismaSessionRepository implements ISessionRepository {
       },
     });
 
-    return new Session(
-      sessionId,
-      userId,
-      createdAt,
-      expiresAt,
-      ipAddress,
-      userAgent
-    );
+    return new Session(sessionId, userId, createdAt, expiresAt, ipAddress, userAgent);
   }
 
   async findById(sessionId: string): Promise<Session | null> {
@@ -59,7 +52,7 @@ export class PrismaSessionRepository implements ISessionRepository {
       record.createdAt,
       record.expiresAt,
       record.ipAddress,
-      record.userAgent
+      record.userAgent,
     );
   }
 
@@ -81,8 +74,8 @@ export class PrismaSessionRepository implements ISessionRepository {
           record.createdAt,
           record.expiresAt,
           record.ipAddress,
-          record.userAgent
-        )
+          record.userAgent,
+        ),
     );
   }
 

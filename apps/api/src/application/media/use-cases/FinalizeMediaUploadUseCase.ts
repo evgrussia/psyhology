@@ -1,14 +1,8 @@
 import { IMediaAssetRepository } from '../../../domain/media/repositories/IMediaAssetRepository';
 import { IStorageService } from '../services/IStorageService';
 import { MediaAssetId } from '../../../domain/media/value-objects/MediaAssetId';
-import {
-  FinalizeMediaUploadRequestDto,
-  FinalizeMediaUploadResponseDto,
-} from '../dto/MediaDtos';
-import {
-  ValidationError,
-  ApplicationError,
-} from '../../shared/errors/ApplicationError';
+import { FinalizeMediaUploadRequestDto, FinalizeMediaUploadResponseDto } from '../dto/MediaDtos';
+import { ValidationError, ApplicationError } from '../../shared/errors/ApplicationError';
 import { IEventBus } from '../../../domain/shared/events/IEventBus';
 
 /**
@@ -18,12 +12,10 @@ export class FinalizeMediaUploadUseCase {
   constructor(
     private readonly mediaAssetRepository: IMediaAssetRepository,
     private readonly storageService: IStorageService,
-    private readonly eventBus: IEventBus
+    private readonly eventBus: IEventBus,
   ) {}
 
-  async execute(
-    dto: FinalizeMediaUploadRequestDto
-  ): Promise<FinalizeMediaUploadResponseDto> {
+  async execute(dto: FinalizeMediaUploadRequestDto): Promise<FinalizeMediaUploadResponseDto> {
     // 1. Валидация
     if (!dto.mediaAssetId || dto.mediaAssetId.trim().length === 0) {
       throw new ValidationError('Media asset ID is required');
@@ -49,19 +41,17 @@ export class FinalizeMediaUploadUseCase {
     // 4. Проверяем, существует ли объект в S3
     const exists = await this.storageService.objectExists(
       mediaAsset.objectKeyValue,
-      mediaAsset.mediaTypeValue
+      mediaAsset.mediaTypeValue,
     );
 
     if (!exists) {
-      throw new ApplicationError(
-        'File not found in storage. Please upload the file first.'
-      );
+      throw new ApplicationError('File not found in storage. Please upload the file first.');
     }
 
     // 5. Генерируем публичный URL
     const publicUrl = this.storageService.generatePublicUrl(
       mediaAsset.objectKeyValue,
-      mediaAsset.mediaTypeValue
+      mediaAsset.mediaTypeValue,
     );
 
     // 6. Завершаем загрузку (устанавливаем публичный URL)

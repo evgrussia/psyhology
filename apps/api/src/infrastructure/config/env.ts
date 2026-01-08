@@ -8,6 +8,10 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1).optional(),
   // S3 Storage (Yandex Object Storage или аналог)
   S3_ENDPOINT: z.string().url().optional(),
+  // Internal endpoint is used for server-side S3 calls (HEAD/DELETE/etc)
+  // Public endpoint is used to generate URLs reachable from browser/clients (pre-signed PUT and public GET)
+  S3_INTERNAL_ENDPOINT: z.string().url().optional(),
+  S3_PUBLIC_ENDPOINT: z.string().url().optional(),
   S3_REGION: z.string().default('ru-central1'),
   S3_ACCESS_KEY_ID: z.string().min(1).optional(),
   S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),

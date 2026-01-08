@@ -62,7 +62,7 @@ async function main() {
   await prisma.$executeRawUnsafe(
     `UPDATE users SET password_hash = $1 WHERE id = $2`,
     passwordHash,
-    owner.id
+    owner.id,
   );
 
   console.log('✅ Set password hash');

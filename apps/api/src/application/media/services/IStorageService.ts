@@ -12,7 +12,7 @@ export interface IStorageService {
     objectKey: ObjectKey,
     mediaType: MediaType,
     mimeType: string,
-    expiresInSeconds?: number
+    expiresInSeconds?: number,
   ): Promise<string>;
 
   /**

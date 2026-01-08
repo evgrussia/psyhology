@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 /**
  * Базовый класс для всех доменных событий
  * События неизменяемы и содержат минимум данных
@@ -8,7 +10,7 @@ export abstract class DomainEvent {
 
   constructor() {
     this.occurredAt = new Date();
-    this.eventId = crypto.randomUUID();
+    this.eventId = randomUUID();
   }
 
   abstract get aggregateId(): string;

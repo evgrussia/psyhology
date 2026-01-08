@@ -6,8 +6,7 @@ import { DomainEvent } from '../../domain/shared/events/DomainEvent';
  * Для production можно заменить на RabbitMQ, Kafka и т.д.
  */
 export class InMemoryEventBus implements IEventBus {
-  private handlers: Map<string, Array<(event: DomainEvent) => Promise<void>>> =
-    new Map();
+  private handlers: Map<string, Array<(event: DomainEvent) => Promise<void>>> = new Map();
 
   async publish(events: DomainEvent[]): Promise<void> {
     for (const event of events) {
@@ -18,10 +17,7 @@ export class InMemoryEventBus implements IEventBus {
     }
   }
 
-  subscribe(
-    eventName: string,
-    handler: (event: DomainEvent) => Promise<void>
-  ): void {
+  subscribe(eventName: string, handler: (event: DomainEvent) => Promise<void>): void {
     const handlers = this.handlers.get(eventName) || [];
     handlers.push(handler);
     this.handlers.set(eventName, handlers);

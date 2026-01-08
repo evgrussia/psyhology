@@ -1,10 +1,7 @@
 import { IUserRepository } from '../../../domain/identity/repositories/IUserRepository';
 import { ISessionRepository } from '../../../domain/identity/repositories/ISessionRepository';
 import { CurrentUserRequestDto, UserDto } from '../dto/AuthDtos';
-import {
-  AuthenticationError,
-  ValidationError,
-} from '../../shared/errors/ApplicationError';
+import { AuthenticationError, ValidationError } from '../../shared/errors/ApplicationError';
 import { Role } from '../../../domain/identity/value-objects/Role';
 
 /**
@@ -13,7 +10,7 @@ import { Role } from '../../../domain/identity/value-objects/Role';
 export class GetCurrentUserUseCase {
   constructor(
     private readonly sessionRepository: ISessionRepository,
-    private readonly userRepository: IUserRepository
+    private readonly userRepository: IUserRepository,
   ) {}
 
   async execute(dto: CurrentUserRequestDto): Promise<UserDto> {

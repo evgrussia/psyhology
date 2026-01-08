@@ -13,7 +13,7 @@ export interface IGoogleCalendarService {
   getBusyIntervals(
     calendarId: string,
     startTime: Date,
-    endTime: Date
+    endTime: Date,
   ): Promise<Array<{ start: Date; end: Date }>>;
 
   /**
@@ -30,7 +30,7 @@ export interface IGoogleCalendarService {
       start: Date;
       end: Date;
       attendees?: Array<{ email: string }>;
-    }
+    },
   ): Promise<string>;
 
   /**

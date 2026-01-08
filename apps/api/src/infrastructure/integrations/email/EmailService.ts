@@ -15,8 +15,7 @@ export class EmailService implements IEmailService {
     // Заглушка: логирует вместо отправки
     // В production будет отправлять через SMTP/API
     console.warn(
-      'EmailService.sendEmail is a stub. ' +
-        'Will be implemented in FEAT-BKG-03 or similar.'
+      'EmailService.sendEmail is a stub. ' + 'Will be implemented in FEAT-BKG-03 or similar.',
     );
     console.log('Email stub:', {
       to: params.to,
@@ -30,12 +29,11 @@ export class EmailService implements IEmailService {
   async sendTemplate(
     templateId: string,
     to: string | string[],
-    variables: Record<string, string>
+    variables: Record<string, string>,
   ): Promise<string | void> {
     // Заглушка
     console.warn(
-      'EmailService.sendTemplate is a stub. ' +
-        'Will be implemented in FEAT-BKG-03 or similar.'
+      'EmailService.sendTemplate is a stub. ' + 'Will be implemented in FEAT-BKG-03 or similar.',
     );
     console.log('Email template stub:', {
       templateId,

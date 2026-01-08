@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
@@ -10,6 +11,7 @@ import { BcryptPasswordHasher } from '../../infrastructure/identity/services/Bcr
 import { InMemoryEventBus } from '../../infrastructure/event-bus/InMemoryEventBus';
 import { PrismaMediaAssetRepository } from '../../infrastructure/media/repositories/PrismaMediaAssetRepository';
 import { S3StorageService } from '../../infrastructure/storage/S3StorageService';
+import { PrismaAuditLogRepository } from '../../infrastructure/audit/repositories/PrismaAuditLogRepository';
 
 // Application
 import { AdminLoginUseCase } from '../../application/identity/use-cases/AdminLoginUseCase';
@@ -19,6 +21,9 @@ import { CreateMediaAssetUseCase } from '../../application/media/use-cases/Creat
 import { FinalizeMediaUploadUseCase } from '../../application/media/use-cases/FinalizeMediaUploadUseCase';
 import { DeleteMediaAssetUseCase } from '../../application/media/use-cases/DeleteMediaAssetUseCase';
 import { ListMediaAssetsUseCase } from '../../application/media/use-cases/ListMediaAssetsUseCase';
+import { WriteAuditLogUseCase } from '../../application/audit/use-cases/WriteAuditLogUseCase';
+import { ListAuditLogUseCase } from '../../application/audit/use-cases/ListAuditLogUseCase';
+import { AuditLogWriter } from '../../application/audit/services/AuditLogWriter';
 
 // Presentation
 import { AuthController } from '../controllers/AuthController.fastify';
@@ -26,6 +31,8 @@ import { AuthMiddleware } from '../middleware/AuthMiddleware.fastify';
 import { registerAuthRoutes } from '../routes/authRoutes.fastify';
 import { MediaController } from '../controllers/MediaController.fastify';
 import { registerMediaRoutes } from '../routes/mediaRoutes.fastify';
+import { AuditLogController } from '../controllers/AuditLogController.fastify';
+import { registerAuditLogRoutes } from '../routes/auditLogRoutes.fastify';
 
 import { User } from '../../domain/identity/aggregates/User';
 
@@ -69,6 +76,7 @@ export async function createApp(): Promise<FastifyInstance> {
   const eventBus = new InMemoryEventBus();
   const mediaAssetRepository = new PrismaMediaAssetRepository(prisma);
   const storageService = new S3StorageService();
+  const auditLogRepository = new PrismaAuditLogRepository(prisma);
 
   // Graceful shutdown
   app.addHook('onClose', async () => {
@@ -82,37 +90,37 @@ export async function createApp(): Promise<FastifyInstance> {
     userRepository,
     sessionRepository,
     passwordHasher,
-    eventBus
+    eventBus,
   );
 
   const logoutUseCase = new LogoutUseCase(sessionRepository);
 
-  const getCurrentUserUseCase = new GetCurrentUserUseCase(
-    sessionRepository,
-    userRepository
-  );
+  const getCurrentUserUseCase = new GetCurrentUserUseCase(sessionRepository, userRepository);
 
   const createMediaAssetUseCase = new CreateMediaAssetUseCase(
     mediaAssetRepository,
     storageService,
-    eventBus
+    eventBus,
   );
 
   const finalizeMediaUploadUseCase = new FinalizeMediaUploadUseCase(
     mediaAssetRepository,
     storageService,
-    eventBus
+    eventBus,
   );
+
+  const writeAuditLogUseCase = new WriteAuditLogUseCase(auditLogRepository);
+  const listAuditLogUseCase = new ListAuditLogUseCase(auditLogRepository);
+  const auditLogWriter = new AuditLogWriter(writeAuditLogUseCase);
 
   const deleteMediaAssetUseCase = new DeleteMediaAssetUseCase(
     mediaAssetRepository,
     storageService,
-    eventBus
+    eventBus,
+    auditLogWriter,
   );
 
-  const listMediaAssetsUseCase = new ListMediaAssetsUseCase(
-    mediaAssetRepository
-  );
+  const listMediaAssetsUseCase = new ListMediaAssetsUseCase(mediaAssetRepository);
 
   // ============================================
   // Presentation Layer
@@ -120,7 +128,7 @@ export async function createApp(): Promise<FastifyInstance> {
   const authController = new AuthController(
     adminLoginUseCase,
     logoutUseCase,
-    getCurrentUserUseCase
+    getCurrentUserUseCase,
   );
 
   const authMiddleware = new AuthMiddleware(sessionRepository, userRepository);
@@ -129,19 +137,23 @@ export async function createApp(): Promise<FastifyInstance> {
     createMediaAssetUseCase,
     finalizeMediaUploadUseCase,
     deleteMediaAssetUseCase,
-    listMediaAssetsUseCase
+    listMediaAssetsUseCase,
   );
+
+  const auditLogController = new AuditLogController(listAuditLogUseCase);
 
   // Добавляем зависимости в декоратор для доступа в routes
   app.decorate('authController', authController);
   app.decorate('authMiddleware', authMiddleware);
   app.decorate('mediaController', mediaController);
+  app.decorate('auditLogController', auditLogController);
 
   // ============================================
   // Routes
   // ============================================
   await app.register(registerAuthRoutes, { prefix: '/api/auth' });
   await app.register(registerMediaRoutes, { prefix: '/api/admin/media' });
+  await app.register(registerAuditLogRoutes, { prefix: '/api/admin' });
 
   // Health check endpoint
   app.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {

@@ -5,7 +5,7 @@
 export class Role {
   private constructor(
     readonly code: string,
-    readonly scope: string
+    readonly scope: string,
   ) {}
 
   static readonly Owner = new Role('owner', 'admin');

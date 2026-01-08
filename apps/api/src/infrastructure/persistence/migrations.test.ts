@@ -51,7 +51,9 @@ describe('Database Migrations', () => {
       await expect(prisma.glossaryTerm.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
 
       // Interactive
-      await expect(prisma.interactiveDefinition.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
+      await expect(prisma.interactiveDefinition.findMany({ take: 1 })).resolves.toBeInstanceOf(
+        Array,
+      );
       await expect(prisma.interactiveRun.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
 
       // Booking & Payments
@@ -78,13 +80,17 @@ describe('Database Migrations', () => {
       await expect(prisma.anonymousQuestion.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
       await expect(prisma.questionAnswer.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
       await expect(prisma.review.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
-      await expect(prisma.reviewPublicationConsent.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
+      await expect(prisma.reviewPublicationConsent.findMany({ take: 1 })).resolves.toBeInstanceOf(
+        Array,
+      );
       await expect(prisma.ugcModerationAction.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
 
       // Admin & Audit
       await expect(prisma.auditLogEntry.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
       await expect(prisma.messageTemplate.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
-      await expect(prisma.messageTemplateVersion.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
+      await expect(prisma.messageTemplateVersion.findMany({ take: 1 })).resolves.toBeInstanceOf(
+        Array,
+      );
       await expect(prisma.systemSetting.findMany({ take: 1 })).resolves.toBeInstanceOf(Array);
     });
 
@@ -213,13 +219,15 @@ describe('Database Migrations', () => {
   describe('Privacy by Design', () => {
     it('should have encrypted fields for P2 data', async () => {
       // Проверяем, что P2 поля существуют и имеют правильные имена
-      const intakeForm = await prisma.intakeForm.create({
-        data: {
-          appointmentId: '00000000-0000-0000-0000-000000000000', // Валидный UUID, но appointment не существует
-          status: 'draft',
-          payloadEncrypted: 'encrypted_data_placeholder',
-        },
-      }).catch(() => null);
+      const intakeForm = await prisma.intakeForm
+        .create({
+          data: {
+            appointmentId: '00000000-0000-0000-0000-000000000000', // Валидный UUID, но appointment не существует
+            status: 'draft',
+            payloadEncrypted: 'encrypted_data_placeholder',
+          },
+        })
+        .catch(() => null);
 
       // Если appointment не существует, получим ошибку FK, но это нормально
       // Главное - проверить, что поле payloadEncrypted существует
@@ -263,4 +271,3 @@ describe('Database Migrations', () => {
     });
   });
 });
-

@@ -36,16 +36,14 @@ export class ObjectKey {
   static generate(
     mediaType: string,
     originalFilename: string,
-    mediaAssetId: EntityId | { value: string }
+    mediaAssetId: EntityId | { value: string },
   ): ObjectKey {
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
 
     // Очищаем имя файла от небезопасных символов
-    const safeFilename = originalFilename
-      .replace(/[^a-zA-Z0-9._-]/g, '_')
-      .substring(0, 100); // ограничиваем длину
+    const safeFilename = originalFilename.replace(/[^a-zA-Z0-9._-]/g, '_').substring(0, 100); // ограничиваем длину
 
     const idValue = mediaAssetId instanceof EntityId ? mediaAssetId.value : mediaAssetId.value;
     const key = `${mediaType}/${year}/${month}/${idValue}-${safeFilename}`;

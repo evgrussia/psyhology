@@ -16,7 +16,7 @@ export class AuthController {
   constructor(
     private readonly adminLoginUseCase: AdminLoginUseCase,
     private readonly logoutUseCase: LogoutUseCase,
-    private readonly getCurrentUserUseCase: GetCurrentUserUseCase
+    private readonly getCurrentUserUseCase: GetCurrentUserUseCase,
   ) {}
 
   /**

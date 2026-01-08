@@ -7,7 +7,7 @@ import { AuthMiddleware } from '../middleware/AuthMiddleware';
  */
 export function createAuthRoutes(
   authController: AuthController,
-  authMiddleware: AuthMiddleware
+  authMiddleware: AuthMiddleware,
 ): Router {
   const router = Router();
 
@@ -28,7 +28,7 @@ export function createAuthRoutes(
    * Получить информацию о текущем пользователе (требует аутентификации)
    */
   router.get('/me', authMiddleware.authenticate(), (req, res) =>
-    authController.getCurrentUser(req, res)
+    authController.getCurrentUser(req, res),
   );
 
   return router;

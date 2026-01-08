@@ -29,10 +29,12 @@ export function createApp(): Express {
   // ============================================
   // Middleware
   // ============================================
-  app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-    credentials: true,
-  }));
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      credentials: true,
+    }),
+  );
   app.use(express.json());
   app.use(cookieParser());
 
@@ -52,15 +54,12 @@ export function createApp(): Express {
     userRepository,
     sessionRepository,
     passwordHasher,
-    eventBus
+    eventBus,
   );
 
   const logoutUseCase = new LogoutUseCase(sessionRepository);
 
-  const getCurrentUserUseCase = new GetCurrentUserUseCase(
-    sessionRepository,
-    userRepository
-  );
+  const getCurrentUserUseCase = new GetCurrentUserUseCase(sessionRepository, userRepository);
 
   // ============================================
   // Presentation Layer
@@ -68,7 +67,7 @@ export function createApp(): Express {
   const authController = new AuthController(
     adminLoginUseCase,
     logoutUseCase,
-    getCurrentUserUseCase
+    getCurrentUserUseCase,
   );
 
   const authMiddleware = new AuthMiddleware(sessionRepository, userRepository);

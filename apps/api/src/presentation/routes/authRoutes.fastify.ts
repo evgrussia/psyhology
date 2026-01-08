@@ -8,7 +8,7 @@ import { AuthMiddleware } from '../middleware/AuthMiddleware.fastify';
  */
 export async function registerAuthRoutes(
   fastify: FastifyInstance,
-  opts: FastifyPluginOptions
+  opts: FastifyPluginOptions,
 ): Promise<void> {
   // Получаем зависимости из декораторов
   const authController = (fastify as any).authController as AuthController;
@@ -58,6 +58,6 @@ export async function registerAuthRoutes(
     },
     async (request, reply) => {
       await authController.getCurrentUser(request, reply);
-    }
+    },
   );
 }

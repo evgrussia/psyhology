@@ -1,3 +1,5 @@
+import { randomUUID as cryptoRandomUUID } from 'crypto';
+
 /**
  * Базовый класс для типизированных ID сущностей
  * Обеспечивает type-safety и предотвращает смешивание разных типов ID
@@ -21,7 +23,12 @@ export abstract class EntityId {
   }
 
   static generate(): string {
-    // Используем crypto.randomUUID() вместо сторонних библиотек
-    return crypto.randomUUID();
+    // Используем crypto.randomUUID() из Node.js crypto модуля
+    // Это работает и в браузере (если доступен) и в Node.js
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    // Fallback для Node.js
+    return cryptoRandomUUID();
   }
 }

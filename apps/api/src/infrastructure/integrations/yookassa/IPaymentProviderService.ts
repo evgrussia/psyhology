@@ -40,7 +40,7 @@ export interface IPaymentProviderService {
    */
   handleWebhook(
     payload: unknown,
-    signature: string
+    signature: string,
   ): Promise<{
     event: string;
     paymentId: string;
