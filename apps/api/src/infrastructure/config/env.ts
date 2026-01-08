@@ -6,6 +6,13 @@ const envSchema = z.object({
   COMMIT_SHA: z.string().min(1).default('dev'),
   // В релизе 1 будет обязательной, но каркас API должен стартовать без БД.
   DATABASE_URL: z.string().min(1).optional(),
+  // S3 Storage (Yandex Object Storage или аналог)
+  S3_ENDPOINT: z.string().url().optional(),
+  S3_REGION: z.string().default('ru-central1'),
+  S3_ACCESS_KEY_ID: z.string().min(1).optional(),
+  S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
+  S3_FORCE_PATH_STYLE: z.coerce.boolean().default(false),
+  S3_CDN_URL: z.string().url().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

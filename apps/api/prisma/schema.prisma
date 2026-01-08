@@ -48,6 +48,7 @@ model User {
   telegramUserId    String?   @unique @map("telegram_user_id") // P1, unique nullable
   telegramUsername  String?   @map("telegram_username") // P1 nullable
   displayName       String?   @map("display_name") // P1 nullable
+  passwordHash      String?   @map("password_hash") // nullable, только для админов
   status            UserStatus @default(active)
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime  @updatedAt @map("updated_at")
@@ -56,6 +57,7 @@ model User {
   // Relations
   userRoles         UserRole[]
   consents          Consent[]
+  sessions          Session[]
   contentItems      ContentItem[] @relation("ContentAuthor")
   appointments      Appointment[]
   diaryEntries     DiaryEntry[]
@@ -109,6 +111,21 @@ model Consent {
   @@map("consents")
 }
 
+model Session {
+  id        String   @id @db.VarChar(255)
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @map("expires_at")
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  userAgent String?  @map("user_agent")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
+}
+
 // ============================================
 // 2. Content (CMS, темы/теги, подборки, словарь, медиа)
 // ============================================
@@ -129,9 +146,9 @@ enum ContentStatus {
 }
 
 enum TimeToBenefit {
-  _1_3_min
-  _7_10_min
-  _20_30_min
+  one_to_three_min  @map("_1_3_min")
+  seven_to_ten_min  @map("_7_10_min")
+  twenty_to_thirty_min @map("_20_30_min")
   series
 }
 

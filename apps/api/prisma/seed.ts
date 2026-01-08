@@ -1,81 +1,85 @@
-// Seed данные для dev/test окружения
-// Запуск: npx prisma db seed (или через package.json)
-
-import { PrismaClient } from '../src/infrastructure/persistence/prisma/generated';
+import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Начинаем seeding...');
+  console.log('🌱 Starting seed...');
 
-  // 1. Роли (Roles)
-  console.log('📝 Создаём роли...');
-  await prisma.role.upsert({
-    where: { code: 'owner' },
-    update: {},
+  // 1. Создаём первого owner пользователя
+  const ownerEmail = 'owner@example.com';
+  const ownerPassword = 'Test123456!'; // В production использовать env variable
+
+  // Хешируем пароль
+  const passwordHash = await bcrypt.hash(ownerPassword, 10);
+
+  const owner = await prisma.user.upsert({
+    where: { email: ownerEmail },
     create: {
-      code: 'owner',
-      scope: 'admin',
+      id: 'owner-001',
+      email: ownerEmail,
+      status: 'active',
+      // Добавляем password_hash после миграции
     },
+    update: {},
   });
 
-  await prisma.role.upsert({
-    where: { code: 'assistant' },
-    update: {},
-    create: {
-      code: 'assistant',
-      scope: 'admin',
-    },
-  });
+  console.log('✅ Created owner user:', owner.email);
 
-  await prisma.role.upsert({
-    where: { code: 'editor' },
-    update: {},
-    create: {
-      code: 'editor',
-      scope: 'product',
-    },
-  });
-
-  await prisma.role.upsert({
-    where: { code: 'client' },
-    update: {},
-    create: {
-      code: 'client',
-      scope: 'product',
-    },
-  });
-
-  // 2. Темы (Topics)
-  console.log('📚 Создаём темы...');
-  const topics = [
-    { code: 'anxiety', title: 'Тревога' },
-    { code: 'burnout', title: 'Выгорание' },
-    { code: 'relationships', title: 'Отношения' },
-    { code: 'boundaries', title: 'Границы' },
-    { code: 'selfesteem', title: 'Самооценка' },
-  ];
-
-  for (const topic of topics) {
-    await prisma.topic.upsert({
-      where: { code: topic.code },
-      update: {},
-      create: {
-        code: topic.code,
-        title: topic.title,
-        isActive: true,
+  // 2. Назначаем роль owner
+  await prisma.userRole.upsert({
+    where: {
+      userId_roleCode: {
+        userId: owner.id,
+        roleCode: 'owner',
       },
-    });
-  }
+    },
+    create: {
+      userId: owner.id,
+      roleCode: 'owner',
+      grantedAt: new Date(),
+    },
+    update: {},
+  });
 
-  console.log('✅ Seeding завершён!');
+  console.log('✅ Assigned owner role');
+
+  // 3. Добавляем согласие на обработку персональных данных
+  await prisma.consent.create({
+    data: {
+      userId: owner.id,
+      consentType: 'personal_data',
+      granted: true,
+      version: '2026-01-08',
+      source: 'system',
+      grantedAt: new Date(),
+    },
+  });
+
+  console.log('✅ Created consent');
+
+  // 4. Обновляем password_hash (после того как поле будет добавлено в миграции)
+  await prisma.$executeRawUnsafe(
+    `UPDATE users SET password_hash = $1 WHERE id = $2`,
+    passwordHash,
+    owner.id
+  );
+
+  console.log('✅ Set password hash');
+
+  console.log('\n📝 Owner credentials:');
+  console.log(`Email: ${ownerEmail}`);
+  console.log(`Password: ${ownerPassword}`);
+  console.log('\n⚠️  Change password in production!');
 }
 
 main()
-  .catch((e) => {
-    console.error('❌ Ошибка при seeding:', e);
-    process.exit(1);
-  })
-  .finally(async () => {
+  .then(async () => {
     await prisma.$disconnect();
+    console.log('\n✅ Seed completed successfully');
+  })
+  .catch(async (e) => {
+    console.error('❌ Seed failed:', e);
+    await prisma.$disconnect();
+    process.exit(1);
   });

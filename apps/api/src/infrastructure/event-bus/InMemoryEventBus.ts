@@ -1,59 +1,29 @@
-import type { DomainEvent } from '../../domain/shared/events/DomainEvent.js';
-import type { IEventBus } from '../../domain/shared/events/IEventBus.js';
-
-type EventHandler = (event: DomainEvent) => Promise<void> | void;
+import { IEventBus } from '../../domain/shared/events/IEventBus';
+import { DomainEvent } from '../../domain/shared/events/DomainEvent';
 
 /**
- * In-memory реализация EventBus для разработки и тестирования.
- * В production может быть заменена на Redis/RabbitMQ/etc.
+ * Простая реализация Event Bus в памяти
+ * Для production можно заменить на RabbitMQ, Kafka и т.д.
  */
 export class InMemoryEventBus implements IEventBus {
-  private readonly handlers = new Map<string, Set<EventHandler>>();
+  private handlers: Map<string, Array<(event: DomainEvent) => Promise<void>>> =
+    new Map();
 
-  async publish(event: DomainEvent): Promise<void> {
-    const handlers = this.handlers.get(event.eventName) ?? new Set();
-    
-    // Выполняем все обработчики параллельно
-    await Promise.all(
-      Array.from(handlers).map(async (handler) => {
-        try {
-          await handler(event);
-        } catch (error) {
-          // В production здесь должен быть retry/dead letter queue
-          console.error(`Error handling event ${event.eventName}:`, error);
-        }
-      })
-    );
+  async publish(events: DomainEvent[]): Promise<void> {
+    for (const event of events) {
+      const eventHandlers = this.handlers.get(event.eventName) || [];
+
+      // Выполняем обработчики параллельно
+      await Promise.all(eventHandlers.map((handler) => handler(event)));
+    }
   }
 
-  async publishAll(events: DomainEvent[]): Promise<void> {
-    await Promise.all(events.map((event) => this.publish(event)));
-  }
-
-  subscribe<T extends DomainEvent>(
+  subscribe(
     eventName: string,
-    handler: (event: T) => Promise<void> | void
+    handler: (event: DomainEvent) => Promise<void>
   ): void {
-    if (!this.handlers.has(eventName)) {
-      this.handlers.set(eventName, new Set());
-    }
-    this.handlers.get(eventName)!.add(handler as EventHandler);
-  }
-
-  unsubscribe(eventName: string, handler: Function): void {
-    const handlers = this.handlers.get(eventName);
-    if (handlers) {
-      handlers.delete(handler as EventHandler);
-      if (handlers.size === 0) {
-        this.handlers.delete(eventName);
-      }
-    }
-  }
-
-  /**
-   * Очищает все подписки (для тестов)
-   */
-  clear(): void {
-    this.handlers.clear();
+    const handlers = this.handlers.get(eventName) || [];
+    handlers.push(handler);
+    this.handlers.set(eventName, handlers);
   }
 }

@@ -1,6 +1,6 @@
 /**
- * Базовый класс для доменных событий.
- * Все доменные события должны наследоваться от этого класса.
+ * Базовый класс для всех доменных событий
+ * События неизменяемы и содержат минимум данных
  */
 export abstract class DomainEvent {
   readonly occurredAt: Date;
@@ -11,13 +11,6 @@ export abstract class DomainEvent {
     this.eventId = crypto.randomUUID();
   }
 
-  /**
-   * ID агрегата, к которому относится событие
-   */
   abstract get aggregateId(): string;
-
-  /**
-   * Имя события (для логирования и маршрутизации)
-   */
   abstract get eventName(): string;
 }
