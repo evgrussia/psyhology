@@ -1,18 +1,14 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-import sharp from "sharp";
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import sharp from 'sharp';
 
-const repoRoot = path.resolve(process.cwd(), "..", "..");
+const repoRoot = path.resolve(process.cwd(), '..', '..');
 
-const WEBP_DIRS = [
-  "assets/graphics/hero",
-  "assets/graphics/photos",
-  "assets/graphics/abstract",
-];
+const WEBP_DIRS = ['assets/graphics/hero', 'assets/graphics/photos', 'assets/graphics/abstract'];
 
-const SVG_WRAPPER_DIRS = ["assets/graphics/icons", "assets/graphics/spot"];
+const SVG_WRAPPER_DIRS = ['assets/graphics/icons', 'assets/graphics/spot'];
 
-const RASTER_EXTS = new Set([".png", ".jpg", ".jpeg"]);
+const RASTER_EXTS = new Set(['.png', '.jpg', '.jpeg']);
 
 function isRaster(p) {
   return RASTER_EXTS.has(path.extname(p).toLowerCase());
@@ -24,7 +20,7 @@ async function safeUnlink(fileAbs) {
     return true;
   } catch (e) {
     // On Windows files can be locked by preview/IDE => EPERM.
-    if (e && (e.code === "EPERM" || e.code === "EACCES")) {
+    if (e && (e.code === 'EPERM' || e.code === 'EACCES')) {
       try {
         await fs.chmod(fileAbs, 0o666);
         await fs.unlink(fileAbs);
@@ -66,7 +62,7 @@ async function ensureDir(dirAbs) {
 
 async function convertToWebp(srcAbs) {
   const srcRel = path.relative(repoRoot, srcAbs);
-  const outAbs = srcAbs.replace(/\.(png|jpe?g)$/i, ".webp");
+  const outAbs = srcAbs.replace(/\.(png|jpe?g)$/i, '.webp');
 
   if (await exists(outAbs)) {
     // If WebP already exists, we only try to remove the original (best-effort).
@@ -79,7 +75,7 @@ async function convertToWebp(srcAbs) {
     };
   }
 
-  const img = sharp(srcAbs, { failOn: "none" });
+  const img = sharp(srcAbs, { failOn: 'none' });
   // Balanced defaults: good quality for UI while keeping size down
   await img.webp({ quality: 82, effort: 5 }).toFile(outAbs);
 
@@ -92,12 +88,12 @@ async function convertToWebp(srcAbs) {
 }
 
 function escapeAttr(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/\"/g, "&quot;").replace(/</g, "&lt;");
+  return String(s).replace(/&/g, '&amp;').replace(/\"/g, '&quot;').replace(/</g, '&lt;');
 }
 
 async function makeSvgWrapper(srcAbs) {
   const srcRel = path.relative(repoRoot, srcAbs);
-  const outAbs = srcAbs.replace(/\.(png|jpe?g)$/i, ".svg");
+  const outAbs = srcAbs.replace(/\.(png|jpe?g)$/i, '.svg');
 
   if (await exists(outAbs)) {
     const removed = await safeUnlink(srcAbs);
@@ -109,7 +105,7 @@ async function makeSvgWrapper(srcAbs) {
     };
   }
 
-  const img = sharp(srcAbs, { failOn: "none" });
+  const img = sharp(srcAbs, { failOn: 'none' });
   const meta = await img.metadata();
   if (!meta.width || !meta.height) {
     throw new Error(`Cannot read dimensions for ${srcRel}`);
@@ -117,8 +113,8 @@ async function makeSvgWrapper(srcAbs) {
 
   const buf = await fs.readFile(srcAbs);
   const ext = path.extname(srcAbs).toLowerCase();
-  const mime = ext === ".png" ? "image/png" : "image/jpeg";
-  const dataUri = `data:${mime};base64,${buf.toString("base64")}`;
+  const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+  const dataUri = `data:${mime};base64,${buf.toString('base64')}`;
 
   const svg = [
     `<?xml version="1.0" encoding="UTF-8"?>`,
@@ -126,9 +122,9 @@ async function makeSvgWrapper(srcAbs) {
     `<image width="${meta.width}" height="${meta.height}" xlink:href="${escapeAttr(dataUri)}" />`,
     `</svg>`,
     ``,
-  ].join("\n");
+  ].join('\n');
 
-  await fs.writeFile(outAbs, svg, "utf8");
+  await fs.writeFile(outAbs, svg, 'utf8');
   const removed = await safeUnlink(srcAbs);
   return {
     srcRel,
@@ -158,8 +154,8 @@ async function run() {
     }
   }
 
-  const logAbs = path.join(repoRoot, "tools/asset-pipeline/last-run.json");
-  await fs.writeFile(logAbs, JSON.stringify(results, null, 2) + "\n", "utf8");
+  const logAbs = path.join(repoRoot, 'tools/asset-pipeline/last-run.json');
+  await fs.writeFile(logAbs, JSON.stringify(results, null, 2) + '\n', 'utf8');
 
   console.log(`Converted to WebP: ${results.webp.length}`);
   console.log(`Converted to SVG wrappers: ${results.svg.length}`);
@@ -170,4 +166,3 @@ run().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
