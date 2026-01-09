@@ -9,7 +9,7 @@ import { Role } from '../../domain/identity/value-objects/Role';
  */
 export async function registerAuditLogRoutes(
   fastify: FastifyInstance,
-  opts: FastifyPluginOptions,
+  _opts: FastifyPluginOptions,
 ): Promise<void> {
   // Получаем зависимости из декораторов
   const auditLogController = (fastify as any).auditLogController as AuditLogController;
@@ -33,8 +33,8 @@ export async function registerAuditLogRoutes(
     {
       preHandler: [authMiddleware.authenticate(), RbacGuard.requireOwnerOrAssistant()],
     },
-    async (request, reply) => {
-      await auditLogController.listAuditLog(request, reply);
+    async (_request, _reply) => {
+      await auditLogController.listAuditLog(_request, _reply);
     },
   );
 }

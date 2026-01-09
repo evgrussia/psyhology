@@ -6,8 +6,8 @@ import type { IEmailService } from './IEmailService.js';
  */
 export class EmailService implements IEmailService {
   async sendEmail(params: {
-    to: string | string[];
-    subject: string;
+    _to: string | string[];
+    _subject: string;
     html?: string;
     text?: string;
     from?: string;
@@ -27,8 +27,8 @@ export class EmailService implements IEmailService {
   }
 
   async sendTemplate(
-    templateId: string,
-    to: string | string[],
+    _templateId: string,
+    _to: string | string[],
     variables: Record<string, string>,
   ): Promise<string | void> {
     // Заглушка

@@ -10,7 +10,7 @@ export class EncryptionService implements IEncryptionService {
   /**
    * @throws Error - заглушка, не должна использоваться в production
    */
-  async encrypt(plaintext: string): Promise<string> {
+  async encrypt(_plaintext: string): Promise<string> {
     throw new Error(
       'EncryptionService is not implemented yet. ' + 'Will be implemented in FEAT-SEC-02.',
     );
@@ -19,7 +19,7 @@ export class EncryptionService implements IEncryptionService {
   /**
    * @throws Error - заглушка, не должна использоваться в production
    */
-  async decrypt(ciphertext: string): Promise<string> {
+  async decrypt(_ciphertext: string): Promise<string> {
     throw new Error(
       'EncryptionService is not implemented yet. ' + 'Will be implemented in FEAT-SEC-02.',
     );

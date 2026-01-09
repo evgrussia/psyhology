@@ -185,20 +185,23 @@ enum LinkType {
 }
 
 model ContentItem {
-  id            String         @id @default(uuid())
-  contentType   ContentType    @map("content_type")
-  slug          String
-  title         String
-  excerpt       String?
-  bodyMarkdown  String?        @map("body_markdown")
-  status        ContentStatus  @default(draft)
-  publishedAt   DateTime?      @map("published_at")
-  authorUserId  String?        @map("author_user_id")
-  timeToBenefit TimeToBenefit? @map("time_to_benefit")
-  format        ContentFormat?
-  supportLevel  SupportLevel?  @map("support_level")
-  createdAt     DateTime       @default(now()) @map("created_at")
-  updatedAt     DateTime       @updatedAt @map("updated_at")
+  id              String         @id @default(uuid())
+  contentType     ContentType    @map("content_type")
+  slug            String
+  title           String
+  excerpt         String?
+  bodyMarkdown    String?        @map("body_markdown")
+  status          ContentStatus  @default(draft)
+  publishedAt     DateTime?      @map("published_at")
+  authorUserId    String?        @map("author_user_id")
+  timeToBenefit   TimeToBenefit? @map("time_to_benefit")
+  format          ContentFormat?
+  supportLevel    SupportLevel?  @map("support_level")
+  metaTitle       String?        @map("meta_title")
+  metaDescription String?        @map("meta_description")
+  canonicalUrl    String?        @map("canonical_url")
+  createdAt       DateTime       @default(now()) @map("created_at")
+  updatedAt       DateTime       @updatedAt @map("updated_at")
 
   author        User?              @relation("ContentAuthor", fields: [authorUserId], references: [id])
   topics        ContentItemTopic[]
@@ -207,8 +210,24 @@ model ContentItem {
   curatedItems  CuratedItem[]
   glossaryLinks GlossaryTermLink[]
 
+  revisions ContentRevision[]
+
   @@unique([contentType, slug])
   @@map("content_items")
+}
+
+model ContentRevision {
+  id              String   @id @default(uuid())
+  contentItemId   String   @map("content_item_id")
+  bodyMarkdown    String?  @map("body_markdown")
+  meta            Json? // дополнительные метаданные (title, excerpt, metaTitle, etc.)
+  changedByUserId String?  @map("changed_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  contentItem ContentItem @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+
+  @@index([contentItemId, createdAt(sort: Desc)])
+  @@map("content_revisions")
 }
 
 model Topic {
@@ -402,6 +421,8 @@ model InteractiveRun {
   resultLevel             ResultLevel? @map("result_level")
   resultProfile           String?      @map("result_profile") // nullable (navigator)
   durationMs              Int?         @map("duration_ms")
+  crisisTriggered         Boolean      @default(false) @map("crisis_triggered")
+  crisisTriggerType       String?      @map("crisis_trigger_type") // nullable
   deepLinkId              String?      @map("deep_link_id")
 
   interactiveDefinition InteractiveDefinition @relation(fields: [interactiveDefinitionId], references: [id], onDelete: Cascade)
@@ -882,6 +903,11 @@ model AuditLogEntry {
 
   actor User @relation(fields: [actorUserId], references: [id])
 
+  @@index([actorUserId], map: "idx_audit_log_actor_user_id")
+  @@index([createdAt(sort: Desc)], map: "idx_audit_log_created_at")
+  @@index([action], map: "idx_audit_log_action")
+  @@index([entityType, entityId], map: "idx_audit_log_entity")
+  @@index([actorUserId, createdAt(sort: Desc)], map: "idx_audit_log_user_time")
   @@map("audit_log_entries")
 }
 

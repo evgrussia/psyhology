@@ -103,7 +103,7 @@ export class ListAuditLogUseCase {
     if (filters.action) {
       try {
         repoFilters.action = AuditAction.fromString(filters.action);
-      } catch (error) {
+      } catch (_error) {
         throw new ValidationError(`Invalid action: ${filters.action}`);
       }
     }
@@ -111,7 +111,7 @@ export class ListAuditLogUseCase {
     if (filters.entityType) {
       try {
         repoFilters.entityType = EntityType.fromString(filters.entityType);
-      } catch (error) {
+      } catch (_error) {
         throw new ValidationError(`Invalid entity type: ${filters.entityType}`);
       }
     }
@@ -123,7 +123,7 @@ export class ListAuditLogUseCase {
     if (filters.actorRole) {
       try {
         repoFilters.actorRole = ActorRole.fromString(filters.actorRole);
-      } catch (error) {
+      } catch (_error) {
         throw new ValidationError(`Invalid actor role: ${filters.actorRole}`);
       }
     }

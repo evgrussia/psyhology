@@ -41,3 +41,13 @@ export class ValidationError extends ApplicationError {
     this.name = 'ValidationError';
   }
 }
+
+/**
+ * Ошибка: ресурс не найден
+ */
+export class NotFoundError extends ApplicationError {
+  constructor(message: string = 'Resource not found') {
+    super(message);
+    this.name = 'NotFoundError';
+  }
+}

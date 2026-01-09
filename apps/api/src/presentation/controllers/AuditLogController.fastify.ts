@@ -1,11 +1,11 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { ListAuditLogUseCase } from '../../../application/audit/use-cases/ListAuditLogUseCase';
+import { ListAuditLogUseCase } from '../../application/audit/use-cases/ListAuditLogUseCase';
 import {
   ValidationError,
   AuthorizationError,
-} from '../../../application/shared/errors/ApplicationError';
-import { Role } from '../../../domain/identity/value-objects/Role';
-import { ActorRole } from '../../../domain/audit/value-objects/ActorRole';
+} from '../../application/shared/errors/ApplicationError';
+import { Role } from '../../domain/identity/value-objects/Role';
+import { ActorRole } from '../../domain/audit/value-objects/ActorRole';
 
 /**
  * Query параметры для GET /api/admin/audit-log

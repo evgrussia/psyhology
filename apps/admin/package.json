@@ -13,7 +13,9 @@
   "dependencies": {
     "next": "^15.5.2",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "@uiw/react-codemirror": "^4.23.12",
+    "@codemirror/lang-markdown": "^6.3.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

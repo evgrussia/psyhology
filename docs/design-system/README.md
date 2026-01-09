@@ -7,15 +7,16 @@
 ### Основные документы
 
 - **[Image Generation Prompts](./Image-Generation-Prompts.md)** - Промпты для генерации всех визуальных элементов через AI
+- **[Components Detailed](./Components-Detailed.md)** - Детальное описание всех компонентов с примерами кода (HTML/CSS/React)
+- **[Icons Reference](./Icons.md)** - Справочник всех иконок проекта с кодами SVG
+- **[Typography Guide](./Typography-Guide.md)** - Расширенное руководство по типографике
+- **[Motion Design](./Motion-Design.md)** - Детальное руководство по анимациям и transitions
+- **[Accessibility Checklist](./Accessibility-Checklist.md)** - Полный чеклист доступности (WCAG 2.1 AA)
+- **[Tokens Reference](./tokens-reference.md)** - Быстрая справка по design tokens
 
-### Дополнительные материалы (будут созданы по мере разработки)
+### Дополнительные материалы (в планах)
 
-- `Components-Detailed.md` - Детальное описание всех компонентов с примерами кода
-- `Icons.md` - Справочник всех иконок проекта с кодами SVG
-- `Typography-Guide.md` - Расширенное руководство по типографике
 - `Color-Psychology.md` - Психология цвета и применение палитры
-- `Motion-Design.md` - Детальное руководство по анимациям и transitions
-- `Accessibility-Checklist.md` - Полный чеклист доступности
 
 ### Графические ресурсы (папки)
 
@@ -44,9 +45,19 @@ design-system/
 
 ## 🎨 Быстрый старт
 
+### Для дизайнеров:
 1. **Изучите основной документ**: [../UI-Kit-Design-System.md](../UI-Kit-Design-System.md)
 2. **Генерируйте визуалы**: Используйте промпты из [Image-Generation-Prompts.md](./Image-Generation-Prompts.md)
-3. **Применяйте компоненты**: Следуйте чеклисту из основного UI Kit
+3. **Изучите компоненты**: [Components-Detailed.md](./Components-Detailed.md)
+4. **Создайте Figma UI Kit**: Используя всё вышеперечисленное
+
+### Для разработчиков:
+1. **Настройте токены**: [tokens-reference.md](./tokens-reference.md) - скопируйте CSS/Tailwind config
+2. **Реализуйте компоненты**: [Components-Detailed.md](./Components-Detailed.md) - примеры кода
+3. **Добавьте иконки**: [Icons.md](./Icons.md) - используйте Lucide Icons
+4. **Настройте типографику**: [Typography-Guide.md](./Typography-Guide.md)
+5. **Добавьте анимации**: [Motion-Design.md](./Motion-Design.md)
+6. **Проверьте доступность**: [Accessibility-Checklist.md](./Accessibility-Checklist.md)
 
 ## 🔗 Связанные документы
 
@@ -56,15 +67,19 @@ design-system/
 
 ## 📋 Статус документации
 
-- [x] UI Kit / Design System - **Готов**
-- [x] Image Generation Prompts - **Готов**
-- [ ] Components Detailed - *В планах*
-- [ ] Icons Reference - *В планах*
-- [ ] Typography Guide - *В планах*
-- [ ] Motion Design - *В планах*
-- [ ] Accessibility Checklist - *В планах*
+- [x] UI Kit / Design System - **Готов** (1,330 строк)
+- [x] Image Generation Prompts - **Готов** (583 строки)
+- [x] Components Detailed - **Готов** (1,200+ строк)
+- [x] Icons Reference - **Готов** (800+ строк)
+- [x] Typography Guide - **Готов** (900+ строк)
+- [x] Motion Design - **Готов** (1,100+ строк)
+- [x] Accessibility Checklist - **Готов** (1,000+ строк)
+- [x] Tokens Reference - **Готов** (150 строк)
+
+**Итого**: ~7,000+ строк полной документации дизайн-системы ✅
 
 ---
 
-**Версия**: 1.0  
-**Последнее обновление**: 7 января 2026
+**Версия**: 1.1  
+**Последнее обновление**: 9 января 2026  
+**Что нового в v1.1**: Добавлена вся недостающая документация по компонентам, иконкам, типографике, анимациям и доступности

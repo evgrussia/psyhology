@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { ISessionRepository } from '../../../domain/identity/repositories/ISessionRepository';
-import { IUserRepository } from '../../../domain/identity/repositories/IUserRepository';
-import { User } from '../../../domain/identity/aggregates/User';
+import { ISessionRepository } from '../../domain/identity/repositories/ISessionRepository';
+import { IUserRepository } from '../../domain/identity/repositories/IUserRepository';
+import { User } from '../../domain/identity/aggregates/User';
 
 /**
  * Расширяем Request для добавления информации о пользователе
@@ -74,7 +74,7 @@ export class AuthMiddleware {
         req.sessionId = sessionId;
 
         next();
-      } catch (error) {
+      } catch (_error) {
         console.error('Auth middleware error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
       }

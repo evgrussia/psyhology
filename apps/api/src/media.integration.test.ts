@@ -10,7 +10,7 @@ describe.skipIf(shouldSkip)('FEAT-PLT-04: Media Upload Integration Tests', () =>
   let app: FastifyInstance;
   let prisma: PrismaClient;
   let sessionId: string;
-  let ownerUserId: string;
+  let _ownerUserId: string;
 
   beforeAll(async () => {
     // Создаём приложение
@@ -49,7 +49,7 @@ describe.skipIf(shouldSkip)('FEAT-PLT-04: Media Upload Integration Tests', () =>
       },
     });
 
-    ownerUserId = owner.id;
+    _ownerUserId = owner.id;
 
     await prisma.userRole.create({
       data: {
@@ -77,7 +77,7 @@ describe.skipIf(shouldSkip)('FEAT-PLT-04: Media Upload Integration Tests', () =>
     );
 
     // Логинимся
-    const loginResponse = await app.inject({
+    const _loginResponse = await app.inject({
       method: 'POST',
       url: '/api/auth/admin/login',
       payload: {
@@ -86,8 +86,8 @@ describe.skipIf(shouldSkip)('FEAT-PLT-04: Media Upload Integration Tests', () =>
       },
     });
 
-    expect(loginResponse.statusCode).toBe(200);
-    const loginCookies = loginResponse.cookies;
+    expect(_loginResponse.statusCode).toBe(200);
+    const loginCookies = _loginResponse.cookies;
     const sessionCookie = loginCookies.find((c) => c.name === 'sessionId');
     expect(sessionCookie).toBeDefined();
     sessionId = sessionCookie!.value;
@@ -468,7 +468,7 @@ describe.skipIf(shouldSkip)('FEAT-PLT-04: Media Upload Integration Tests', () =>
       );
 
       // Логинимся как client
-      const loginResponse = await app.inject({
+      const _loginResponse = await app.inject({
         method: 'POST',
         url: '/api/auth/admin/login',
         payload: {

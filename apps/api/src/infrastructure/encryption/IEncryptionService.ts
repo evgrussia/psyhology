@@ -8,14 +8,14 @@ export interface IEncryptionService {
    * @param plaintext открытый текст
    * @returns зашифрованный текст (base64)
    */
-  encrypt(plaintext: string): Promise<string>;
+  encrypt(_plaintext: string): Promise<string>;
 
   /**
    * Расшифровывает данные
    * @param ciphertext зашифрованный текст (base64)
    * @returns открытый текст
    */
-  decrypt(ciphertext: string): Promise<string>;
+  decrypt(_ciphertext: string): Promise<string>;
 
   /**
    * Проверяет, зашифрованы ли данные

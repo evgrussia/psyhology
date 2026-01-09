@@ -2,6 +2,7 @@ import 'dotenv/config';
 import Fastify, { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import fastifyCookie from '@fastify/cookie';
 import fastifyCors from '@fastify/cors';
+import { pathToFileURL } from 'url';
 import { PrismaClient } from '@prisma/client';
 
 // Infrastructure
@@ -12,6 +13,12 @@ import { InMemoryEventBus } from '../../infrastructure/event-bus/InMemoryEventBu
 import { PrismaMediaAssetRepository } from '../../infrastructure/media/repositories/PrismaMediaAssetRepository';
 import { S3StorageService } from '../../infrastructure/storage/S3StorageService';
 import { PrismaAuditLogRepository } from '../../infrastructure/audit/repositories/PrismaAuditLogRepository';
+import { PrismaInteractiveRunRepository } from '../../infrastructure/interactive/repositories/PrismaInteractiveRunRepository';
+import { PrismaInteractiveDefinitionRepository } from '../../infrastructure/interactive/repositories/PrismaInteractiveDefinitionRepository';
+import { PrismaContentItemRepository } from '../../infrastructure/content/repositories/PrismaContentItemRepository';
+import { MarkdownRenderer } from '../../infrastructure/content/services/MarkdownRenderer';
+import { LoggingAnalyticsService } from '../../infrastructure/analytics/LoggingAnalyticsService';
+import { AnalyticsEventSubscriber } from '../../infrastructure/analytics/AnalyticsEventSubscriber';
 
 // Application
 import { AdminLoginUseCase } from '../../application/identity/use-cases/AdminLoginUseCase';
@@ -24,6 +31,19 @@ import { ListMediaAssetsUseCase } from '../../application/media/use-cases/ListMe
 import { WriteAuditLogUseCase } from '../../application/audit/use-cases/WriteAuditLogUseCase';
 import { ListAuditLogUseCase } from '../../application/audit/use-cases/ListAuditLogUseCase';
 import { AuditLogWriter } from '../../application/audit/services/AuditLogWriter';
+import { StartInteractiveRunUseCase } from '../../application/interactive/use-cases/StartInteractiveRunUseCase';
+import { CompleteInteractiveRunUseCase } from '../../application/interactive/use-cases/CompleteInteractiveRunUseCase';
+import { CreateContentItemUseCase } from '../../application/content/use-cases/CreateContentItemUseCase';
+import { UpdateContentItemUseCase } from '../../application/content/use-cases/UpdateContentItemUseCase';
+import { GetContentItemUseCase } from '../../application/content/use-cases/GetContentItemUseCase';
+import { ListContentItemsUseCase } from '../../application/content/use-cases/ListContentItemsUseCase';
+import { PublishContentItemUseCase } from '../../application/content/use-cases/PublishContentItemUseCase';
+import { GetContentItemBySlugUseCase } from '../../application/content/use-cases/GetContentItemBySlugUseCase';
+import { RollbackContentItemUseCase } from '../../application/content/use-cases/RollbackContentItemUseCase';
+import { ListContentRevisionsUseCase } from '../../application/content/use-cases/ListContentRevisionsUseCase';
+import { ArchiveContentItemUseCase } from '../../application/content/use-cases/ArchiveContentItemUseCase';
+import { ListPublicContentItemsUseCase } from '../../application/content/use-cases/ListPublicContentItemsUseCase';
+import { RenderMarkdownPreviewUseCase } from '../../application/content/use-cases/RenderMarkdownPreviewUseCase';
 
 // Presentation
 import { AuthController } from '../controllers/AuthController.fastify';
@@ -33,6 +53,10 @@ import { MediaController } from '../controllers/MediaController.fastify';
 import { registerMediaRoutes } from '../routes/mediaRoutes.fastify';
 import { AuditLogController } from '../controllers/AuditLogController.fastify';
 import { registerAuditLogRoutes } from '../routes/auditLogRoutes.fastify';
+import { InteractiveController } from '../controllers/InteractiveController.fastify';
+import { registerInteractiveRoutes } from '../routes/interactiveRoutes.fastify';
+import { ContentController } from '../controllers/ContentController.fastify';
+import { registerContentRoutes } from '../routes/contentRoutes.fastify';
 
 import { User } from '../../domain/identity/aggregates/User';
 
@@ -57,8 +81,12 @@ export async function createApp(): Promise<FastifyInstance> {
   // ============================================
   // Plugins
   // ============================================
+  const corsOrigins =
+    process.env.CORS_ORIGINS?.split(',').map((s) => s.trim()).filter(Boolean) ||
+    (process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : ['http://localhost:3000', 'http://localhost:3002']);
+
   await app.register(fastifyCors, {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: corsOrigins,
     credentials: true,
   });
 
@@ -77,6 +105,11 @@ export async function createApp(): Promise<FastifyInstance> {
   const mediaAssetRepository = new PrismaMediaAssetRepository(prisma);
   const storageService = new S3StorageService();
   const auditLogRepository = new PrismaAuditLogRepository(prisma);
+  const interactiveRunRepository = new PrismaInteractiveRunRepository(prisma);
+  const interactiveDefinitionRepository = new PrismaInteractiveDefinitionRepository(prisma);
+  const contentItemRepository = new PrismaContentItemRepository(prisma);
+  const markdownRenderer = new MarkdownRenderer();
+  const analyticsService = new LoggingAnalyticsService();
 
   // Graceful shutdown
   app.addHook('onClose', async () => {
@@ -122,6 +155,47 @@ export async function createApp(): Promise<FastifyInstance> {
 
   const listMediaAssetsUseCase = new ListMediaAssetsUseCase(mediaAssetRepository);
 
+  // Interactive Use Cases
+  const startInteractiveRunUseCase = new StartInteractiveRunUseCase(
+    interactiveRunRepository,
+    interactiveDefinitionRepository,
+    eventBus,
+  );
+
+  const completeInteractiveRunUseCase = new CompleteInteractiveRunUseCase(
+    interactiveRunRepository,
+    eventBus,
+  );
+
+  // Content Use Cases
+  const createContentItemUseCase = new CreateContentItemUseCase(contentItemRepository, eventBus);
+  const updateContentItemUseCase = new UpdateContentItemUseCase(contentItemRepository, eventBus);
+  const getContentItemUseCase = new GetContentItemUseCase(contentItemRepository);
+  const listContentItemsUseCase = new ListContentItemsUseCase(contentItemRepository);
+  const publishContentItemUseCase = new PublishContentItemUseCase(
+    contentItemRepository,
+    eventBus,
+  );
+  const getContentItemBySlugUseCase = new GetContentItemBySlugUseCase(
+    contentItemRepository,
+    markdownRenderer,
+  );
+
+  const listPublicContentItemsUseCase = new ListPublicContentItemsUseCase(contentItemRepository);
+
+  const rollbackContentItemUseCase = new RollbackContentItemUseCase(
+    contentItemRepository,
+    eventBus,
+  );
+
+  const listContentRevisionsUseCase = new ListContentRevisionsUseCase(contentItemRepository);
+
+  const archiveContentItemUseCase = new ArchiveContentItemUseCase(contentItemRepository, eventBus);
+  const renderMarkdownPreviewUseCase = new RenderMarkdownPreviewUseCase(markdownRenderer);
+
+  // Подписываемся на доменные события для аналитики
+  new AnalyticsEventSubscriber(eventBus, analyticsService);
+
   // ============================================
   // Presentation Layer
   // ============================================
@@ -142,11 +216,32 @@ export async function createApp(): Promise<FastifyInstance> {
 
   const auditLogController = new AuditLogController(listAuditLogUseCase);
 
+  const interactiveController = new InteractiveController(
+    startInteractiveRunUseCase,
+    completeInteractiveRunUseCase,
+  );
+
+  const contentController = new ContentController(
+    createContentItemUseCase,
+    updateContentItemUseCase,
+    getContentItemUseCase,
+    listContentItemsUseCase,
+    publishContentItemUseCase,
+    getContentItemBySlugUseCase,
+    rollbackContentItemUseCase,
+    listContentRevisionsUseCase,
+    archiveContentItemUseCase,
+    listPublicContentItemsUseCase,
+    renderMarkdownPreviewUseCase,
+  );
+
   // Добавляем зависимости в декоратор для доступа в routes
   app.decorate('authController', authController);
   app.decorate('authMiddleware', authMiddleware);
   app.decorate('mediaController', mediaController);
   app.decorate('auditLogController', auditLogController);
+  app.decorate('interactiveController', interactiveController);
+  app.decorate('contentController', contentController);
 
   // ============================================
   // Routes
@@ -154,9 +249,13 @@ export async function createApp(): Promise<FastifyInstance> {
   await app.register(registerAuthRoutes, { prefix: '/api/auth' });
   await app.register(registerMediaRoutes, { prefix: '/api/admin/media' });
   await app.register(registerAuditLogRoutes, { prefix: '/api/admin' });
+  await app.register(registerInteractiveRoutes, {
+    interactiveController: interactiveController,
+  });
+  await app.register(registerContentRoutes);
 
   // Health check endpoint
-  app.get('/health', async (request: FastifyRequest, reply: FastifyReply) => {
+  app.get('/health', async (_request: FastifyRequest, _reply: FastifyReply) => {
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
@@ -188,4 +287,7 @@ async function start() {
 
 // Start server
 // При запуске через tsx watch этот файл всегда является главным модулем
-start();
+const isMainModule = Boolean(process.argv[1]) && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isMainModule) {
+  start();
+}

@@ -4,7 +4,7 @@ import { MediaType } from '../../domain/media/value-objects/MediaType';
 import {
   S3Client,
   PutObjectCommand,
-  GetObjectCommand,
+  // GetObjectCommand будет использоваться позже для скачивания
   DeleteObjectCommand,
   HeadObjectCommand,
 } from '@aws-sdk/client-s3';
@@ -81,7 +81,7 @@ export class S3StorageService implements IStorageService {
         expiresIn: expiresInSeconds,
       });
       return url;
-    } catch (error) {
+    } catch (_error) {
       console.error('Failed to generate upload URL:', error);
       throw new Error(`Failed to generate upload URL: ${error}`);
     }
@@ -140,7 +140,7 @@ export class S3StorageService implements IStorageService {
       });
 
       await this.s3ClientInternal.send(command);
-    } catch (error) {
+    } catch (_error) {
       console.error('Failed to delete object:', error);
       throw new Error(`Failed to delete object: ${error}`);
     }

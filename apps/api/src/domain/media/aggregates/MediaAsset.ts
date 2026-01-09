@@ -61,7 +61,7 @@ export class MediaAsset {
           `MIME type ${mimeType} does not match media type ${mediaType.toString()}`,
         );
       }
-    } catch (error) {
+    } catch (_error) {
       throw new DomainError(`Unsupported MIME type: ${mimeType}`);
     }
 

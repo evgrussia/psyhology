@@ -6,14 +6,14 @@ import type { IPaymentProviderService } from './IPaymentProviderService.js';
  */
 export class YooKassaAdapter implements IPaymentProviderService {
   async createPaymentIntent(params: {
-    amount: number;
-    currency: string;
-    description: string;
-    returnUrl: string;
-    idempotencyKey: string;
+    _amount: number;
+    _currency: string;
+    _description: string;
+    _returnUrl: string;
+    _idempotencyKey: string;
     metadata?: Record<string, string>;
   }): Promise<{
-    paymentId: string;
+    _paymentId: string;
     confirmationUrl?: string;
     confirmationToken?: string;
   }> {
@@ -23,15 +23,15 @@ export class YooKassaAdapter implements IPaymentProviderService {
       'YooKassaAdapter.createPaymentIntent is a stub. ' + 'Will be implemented in FEAT-PAY-01.',
     );
     return {
-      paymentId: `stub_payment_${crypto.randomUUID()}`,
+      _paymentId: `stub_payment_${crypto.randomUUID()}`,
       confirmationUrl: `https://yookassa.test/checkout?token=stub_${params.idempotencyKey}`,
     };
   }
 
-  async getPaymentStatus(paymentId: string): Promise<{
+  async getPaymentStatus(_paymentId: string): Promise<{
     status: 'pending' | 'succeeded' | 'canceled' | 'failed';
-    amount: number;
-    currency: string;
+    _amount: number;
+    _currency: string;
   }> {
     // Заглушка
     console.warn(
@@ -45,12 +45,12 @@ export class YooKassaAdapter implements IPaymentProviderService {
   }
 
   async handleWebhook(
-    payload: unknown,
-    signature: string,
+    _payload: unknown,
+    _signature: string,
   ): Promise<{
-    event: string;
-    paymentId: string;
-    status: string;
+    _event: string;
+    _paymentId: string;
+    _status: string;
   }> {
     // Заглушка
     console.warn(

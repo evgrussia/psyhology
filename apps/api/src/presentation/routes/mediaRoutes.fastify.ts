@@ -8,7 +8,7 @@ import { AuthMiddleware } from '../middleware/AuthMiddleware.fastify';
  */
 export async function registerMediaRoutes(
   fastify: FastifyInstance,
-  opts: FastifyPluginOptions,
+  _opts: FastifyPluginOptions,
 ): Promise<void> {
   // Получаем зависимости из декораторов
   const mediaController = (fastify as any).mediaController as MediaController;
@@ -24,8 +24,8 @@ export async function registerMediaRoutes(
     {
       preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
-    async (request, reply) => {
-      await mediaController.initUpload(request, reply);
+    async (_request, _reply) => {
+      await mediaController.initUpload(_request, _reply);
     },
   );
 
@@ -39,8 +39,8 @@ export async function registerMediaRoutes(
     {
       preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
-    async (request, reply) => {
-      await mediaController.finalizeUpload(request as any, reply);
+    async (_request, _reply) => {
+      await mediaController.finalizeUpload(_request as any, _reply);
     },
   );
 
@@ -54,8 +54,8 @@ export async function registerMediaRoutes(
     {
       preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
-    async (request, reply) => {
-      await mediaController.deleteMedia(request as any, reply);
+    async (_request, _reply) => {
+      await mediaController.deleteMedia(_request as any, _reply);
     },
   );
 
@@ -69,8 +69,8 @@ export async function registerMediaRoutes(
     {
       preHandler: [authMiddleware.authenticate(), RbacGuard.requireContentManager()],
     },
-    async (request, reply) => {
-      await mediaController.listMedia(request as any, reply);
+    async (_request, _reply) => {
+      await mediaController.listMedia(_request as any, _reply);
     },
   );
 }

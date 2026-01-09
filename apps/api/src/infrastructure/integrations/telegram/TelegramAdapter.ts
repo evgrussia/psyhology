@@ -6,9 +6,9 @@ import type { ITelegramBotService } from './ITelegramBotService.js';
  */
 export class TelegramAdapter implements ITelegramBotService {
   async sendMessage(
-    chatId: string | number,
-    text: string,
-    options?: {
+    _chatId: string | number,
+    _text: string,
+    _options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
       replyMarkup?: unknown;
     },
@@ -20,9 +20,9 @@ export class TelegramAdapter implements ITelegramBotService {
   }
 
   async sendChannelMessage(
-    channelId: string,
-    text: string,
-    options?: {
+    _channelId: string,
+    _text: string,
+    _options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
     },
   ): Promise<number> {
@@ -33,13 +33,13 @@ export class TelegramAdapter implements ITelegramBotService {
     return Math.floor(Math.random() * 1000000);
   }
 
-  async editMessage(chatId: string | number, messageId: number, text: string): Promise<void> {
+  async editMessage(_chatId: string | number, _messageId: number, _text: string): Promise<void> {
     // Заглушка
     console.warn('TelegramAdapter.editMessage is a stub. ' + 'Will be implemented in FEAT-TG-01.');
   }
 
-  async getUserInfo(userId: number): Promise<{
-    id: number;
+  async getUserInfo(UserId: number): Promise<{
+    _id: number;
     username?: string;
     firstName?: string;
     lastName?: string;

@@ -8,7 +8,7 @@ import { AuthMiddleware } from '../middleware/AuthMiddleware.fastify';
  */
 export async function registerAuthRoutes(
   fastify: FastifyInstance,
-  opts: FastifyPluginOptions,
+  _opts: FastifyPluginOptions,
 ): Promise<void> {
   // Получаем зависимости из декораторов
   const authController = (fastify as any).authController as AuthController;
@@ -26,7 +26,7 @@ export async function registerAuthRoutes(
         // Используем IP адрес для rate limiting
         return request.ip || request.socket.remoteAddress || 'unknown';
       },
-      errorResponseBuilder: (request, context) => {
+      errorResponseBuilder: (_request, context) => {
         return {
           success: false,
           error: 'TooManyRequests',
@@ -36,16 +36,16 @@ export async function registerAuthRoutes(
       },
     });
 
-    fastify.post('/admin/login', async (request, reply) => {
-      await authController.adminLogin(request, reply);
+    fastify.post('/admin/login', async (_request, _reply) => {
+      await authController.adminLogin(_request, _reply);
     });
   });
 
   /**
    * POST /api/auth/logout
    */
-  fastify.post('/logout', async (request, reply) => {
-    await authController.logout(request, reply);
+  fastify.post('/logout', async (_request, _reply) => {
+    await authController.logout(_request, _reply);
   });
 
   /**
@@ -56,8 +56,8 @@ export async function registerAuthRoutes(
     {
       preHandler: authMiddleware.authenticate(),
     },
-    async (request, reply) => {
-      await authController.getCurrentUser(request, reply);
+    async (_request, _reply) => {
+      await authController.getCurrentUser(_request, _reply);
     },
   );
 }

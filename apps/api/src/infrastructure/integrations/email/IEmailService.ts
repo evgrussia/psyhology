@@ -9,8 +9,8 @@ export interface IEmailService {
    * @returns ID отправленного письма (если поддерживается)
    */
   sendEmail(params: {
-    to: string | string[];
-    subject: string;
+    _to: string | string[];
+    _subject: string;
     html?: string;
     text?: string;
     from?: string;
@@ -24,8 +24,8 @@ export interface IEmailService {
    * @returns ID отправленного письма
    */
   sendTemplate(
-    templateId: string,
-    to: string | string[],
+    _templateId: string,
+    _to: string | string[],
     variables: Record<string, string>,
   ): Promise<string | void>;
 }

@@ -30,7 +30,7 @@ export class CreateMediaAssetUseCase {
     let mediaType: MediaType;
     try {
       mediaType = MediaType.fromMimeType(dto.mimeType);
-    } catch (error) {
+    } catch (_error) {
       throw new ValidationError(
         `Unsupported MIME type: ${dto.mimeType}. Supported types: image/*, audio/*, application/pdf`,
       );

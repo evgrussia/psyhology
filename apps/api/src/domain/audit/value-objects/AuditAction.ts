@@ -12,8 +12,8 @@ export class AuditAction {
   static readonly AdminContentPublished = new AuditAction('admin_content_published');
   static readonly AdminUserBlocked = new AuditAction('admin_user_blocked');
   static readonly AdminUserUnblocked = new AuditAction('admin_user_unblocked');
-  static readonly AdminRoleAssigned = new AuditAction('admin_role_assigned');
-  static readonly AdminRoleRemoved = new AuditAction('admin_role_removed');
+  static readonly AdminRoleAssigned = new AuditAction('adminRole_assigned');
+  static readonly AdminRoleRemoved = new AuditAction('adminRole_removed');
 
   static create(value: string): AuditAction {
     if (!value || value.trim().length === 0) {

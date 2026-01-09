@@ -1,9 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ListAuditLogUseCase } from './ListAuditLogUseCase';
 import { IAuditLogRepository } from '../../../domain/audit/repositories/IAuditLogRepository';
-import { ValidationError, AuthorizationError } from '../../shared/errors/ApplicationError';
+import {
+  ValidationError,
+  AuthorizationError,
+} from '../../shared/errors/ApplicationError';
 import { AuditLogEntry } from '../../../domain/audit/entities/AuditLogEntry';
-import { AuditLogEntryId } from '../../../domain/audit/value-objects/AuditLogEntryId';
 import { UserId } from '../../../domain/identity/value-objects/Ids';
 import { AuditAction } from '../../../domain/audit/value-objects/AuditAction';
 import { EntityType } from '../../../domain/audit/value-objects/EntityType';

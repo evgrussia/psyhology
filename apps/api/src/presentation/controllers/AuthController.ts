@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { AdminLoginUseCase } from '../../../application/identity/use-cases/AdminLoginUseCase';
-import { LogoutUseCase } from '../../../application/identity/use-cases/LogoutUseCase';
-import { GetCurrentUserUseCase } from '../../../application/identity/use-cases/GetCurrentUserUseCase';
+import { AdminLoginUseCase } from '../../application/identity/use-cases/AdminLoginUseCase';
+import { LogoutUseCase } from '../../application/identity/use-cases/LogoutUseCase';
+import { GetCurrentUserUseCase } from '../../application/identity/use-cases/GetCurrentUserUseCase';
 import {
   AuthenticationError,
   AuthorizationError,
   ValidationError,
-} from '../../../application/shared/errors/ApplicationError';
-import { DomainError } from '../../../domain/shared/errors/DomainError';
+} from '../../application/shared/errors/ApplicationError';
+import { DomainError } from '../../domain/shared/errors/DomainError';
 
 /**
  * Controller для аутентификации

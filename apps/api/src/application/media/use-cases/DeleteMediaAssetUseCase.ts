@@ -62,9 +62,9 @@ export class DeleteMediaAssetUseCase {
     // 5. Удаляем объект из S3
     try {
       await this.storageService.deleteObject(mediaAsset.objectKeyValue, mediaAsset.mediaTypeValue);
-    } catch (error) {
+    } catch (_error) {
       // Логируем ошибку, но продолжаем удаление записи из БД
-      console.error('Failed to delete object from storage:', error);
+      console.error('Failed to delete object from storage:', _error);
       // Можно добавить retry логику или пометить для фонового удаления
     }
 
@@ -96,7 +96,7 @@ export class DeleteMediaAssetUseCase {
           ipAddress: ipAddress ?? null,
           userAgent: userAgent ?? null,
         });
-      } catch (error) {
+      } catch (_error) {
         // Best effort - не ломаем операцию удаления если audit log недоступен
         console.error('Failed to write audit log entry:', error);
       }

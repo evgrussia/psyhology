@@ -57,9 +57,9 @@ export class WriteAuditLogUseCase {
       actorRole = ActorRole.fromString(dto.actorRole);
       action = AuditAction.fromString(dto.action);
       entityType = EntityType.fromString(dto.entityType);
-    } catch (error) {
+    } catch (_error) {
       throw new ValidationError(
-        `Invalid value object: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        `Invalid value object: ${_error instanceof Error ? _error.message : 'Unknown error'}`,
       );
     }
 
@@ -83,10 +83,10 @@ export class WriteAuditLogUseCase {
     // Используем try-catch для "best effort" - не ломаем основную операцию
     try {
       await this.auditLogRepository.save(entry);
-    } catch (error) {
+    } catch (_error) {
       // Логируем ошибку, но не пробрасываем её дальше
       // В production здесь должен быть logger
-      console.error('Failed to write audit log entry:', error);
+      console.error('Failed to write audit log entry:', _error);
       // Для критичных действий (экспорт) можно пробросить ошибку
       // Но по умолчанию делаем "best effort"
     }

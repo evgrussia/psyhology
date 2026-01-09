@@ -37,7 +37,7 @@ export class AdminLoginUseCase {
     let email: Email;
     try {
       email = Email.create(dto.email);
-    } catch (error) {
+    } catch (_error) {
       throw new ValidationError('Invalid email format');
     }
 

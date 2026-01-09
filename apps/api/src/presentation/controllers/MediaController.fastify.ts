@@ -1,15 +1,15 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { CreateMediaAssetUseCase } from '../../../application/media/use-cases/CreateMediaAssetUseCase';
-import { FinalizeMediaUploadUseCase } from '../../../application/media/use-cases/FinalizeMediaUploadUseCase';
-import { DeleteMediaAssetUseCase } from '../../../application/media/use-cases/DeleteMediaAssetUseCase';
-import { ListMediaAssetsUseCase } from '../../../application/media/use-cases/ListMediaAssetsUseCase';
+import { CreateMediaAssetUseCase } from '../../application/media/use-cases/CreateMediaAssetUseCase';
+import { FinalizeMediaUploadUseCase } from '../../application/media/use-cases/FinalizeMediaUploadUseCase';
+import { DeleteMediaAssetUseCase } from '../../application/media/use-cases/DeleteMediaAssetUseCase';
+import { ListMediaAssetsUseCase } from '../../application/media/use-cases/ListMediaAssetsUseCase';
 import {
   ValidationError,
   ApplicationError,
   AuthorizationError,
-} from '../../../application/shared/errors/ApplicationError';
-import { DomainError } from '../../../domain/shared/errors/DomainError';
-import { UserId } from '../../../domain/identity/value-objects/Ids';
+} from '../../application/shared/errors/ApplicationError';
+import { DomainError } from '../../domain/shared/errors/DomainError';
+import { UserId } from '../../domain/identity/value-objects/Ids';
 
 /**
  * Controller для работы с медиа-активами (Fastify version)

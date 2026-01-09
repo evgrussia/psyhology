@@ -9,14 +9,14 @@ export interface IPaymentProviderService {
    * @returns данные для оплаты (redirect URL, confirmation token, etc.)
    */
   createPaymentIntent(params: {
-    amount: number;
-    currency: string;
-    description: string;
-    returnUrl: string;
-    idempotencyKey: string;
+    _amount: number;
+    _currency: string;
+    _description: string;
+    _returnUrl: string;
+    _idempotencyKey: string;
     metadata?: Record<string, string>;
   }): Promise<{
-    paymentId: string;
+    _paymentId: string;
     confirmationUrl?: string;
     confirmationToken?: string;
   }>;
@@ -26,10 +26,10 @@ export interface IPaymentProviderService {
    * @param paymentId ID платежа
    * @returns статус платежа
    */
-  getPaymentStatus(paymentId: string): Promise<{
+  getPaymentStatus(_paymentId: string): Promise<{
     status: 'pending' | 'succeeded' | 'canceled' | 'failed';
-    amount: number;
-    currency: string;
+    _amount: number;
+    _currency: string;
   }>;
 
   /**
@@ -39,11 +39,11 @@ export interface IPaymentProviderService {
    * @returns обработанное событие
    */
   handleWebhook(
-    payload: unknown,
-    signature: string,
+    _payload: unknown,
+    _signature: string,
   ): Promise<{
-    event: string;
-    paymentId: string;
-    status: string;
+    _event: string;
+    _paymentId: string;
+    _status: string;
   }>;
 }

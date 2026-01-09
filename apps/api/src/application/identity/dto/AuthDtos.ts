@@ -1,6 +1,3 @@
-import { UserId } from '../../../domain/identity/value-objects/Ids';
-import { Role } from '../../../domain/identity/value-objects/Role';
-
 /**
  * DTO для запроса входа в админку
  */

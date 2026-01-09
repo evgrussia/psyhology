@@ -1,0 +1,253 @@
+/* Base Button Styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-out);
+  text-decoration: none;
+  white-space: nowrap;
+  position: relative;
+  outline: none;
+}
+
+.button:focus-visible {
+  box-shadow: var(--shadow-focus);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* === VARIANTS === */
+
+/* Primary */
+.primary {
+  background: var(--color-sage-500);
+  color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--color-sage-600);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.primary:disabled {
+  background: var(--color-sand-300);
+  color: var(--color-sand-600);
+  transform: none;
+}
+
+/* Secondary */
+.secondary {
+  background: transparent;
+  color: var(--color-sage-700);
+  border: 2px solid var(--color-sage-500);
+  border-radius: var(--radius-lg);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--color-sage-500);
+  color: white;
+}
+
+.secondary:disabled {
+  border-color: var(--color-sand-300);
+  color: var(--color-sand-600);
+}
+
+/* Ghost */
+.ghost {
+  background: transparent;
+  color: var(--color-sage-600);
+  border-radius: var(--radius-md);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--color-sage-100);
+  color: var(--color-sage-700);
+}
+
+.ghost:disabled {
+  color: var(--color-sand-500);
+}
+
+/* Pill (фирменная кнопка-пилюля) */
+.pill {
+  background: var(--color-sage-200);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  padding: 0;
+  gap: 0;
+}
+
+.pill:hover:not(:disabled) {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.pill:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pill:disabled {
+  background: var(--color-sand-200);
+}
+
+.pillText {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-sage-900);
+  transition: color var(--duration-normal) ease;
+}
+
+.pill:disabled .pillText {
+  color: var(--color-sand-600);
+}
+
+.pillIcon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-sage-700);
+  border-radius: var(--radius-circle);
+  transition: all var(--duration-normal) var(--ease-out);
+  color: white;
+  font-size: 20px;
+}
+
+.pill:hover:not(:disabled) .pillIcon {
+  background: var(--color-sage-600);
+  transform: scale(1.05);
+}
+
+.pill:disabled .pillIcon {
+  background: var(--color-sand-400);
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.pill:hover:not(:disabled) .arrow {
+  transform: translateX(3px);
+}
+
+/* === SIZES === */
+
+/* Small */
+.sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+  min-height: 36px;
+}
+
+.pill.sm .pillText {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
+.pill.sm .pillIcon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  font-size: 16px;
+}
+
+/* Medium (default) */
+.md {
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-base);
+  min-height: 44px;
+}
+
+.pill.md .pillText {
+  padding: var(--space-3) var(--space-6);
+}
+
+/* Large */
+.lg {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-lg);
+  min-height: 52px;
+}
+
+.pill.lg .pillText {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--font-size-lg);
+}
+
+.pill.lg .pillIcon {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  font-size: 24px;
+}
+
+/* === LOADING STATE === */
+
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--radius-circle);
+  animation: spin 0.8s linear infinite;
+}
+
+.pill .spinner {
+  width: 20px;
+  height: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* === ACCESSIBILITY === */
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+  
+  .spinner {
+    animation: none;
+    border-top-color: currentColor;
+    opacity: 0.5;
+  }
+}
+
+/* Высокий контраст */
+@media (prefers-contrast: high) {
+  .button:focus-visible {
+    outline: 4px solid var(--color-sage-500);
+    outline-offset: 4px;
+  }
+}

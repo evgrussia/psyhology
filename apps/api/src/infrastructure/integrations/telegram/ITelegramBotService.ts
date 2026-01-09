@@ -11,9 +11,9 @@ export interface ITelegramBotService {
    * @returns ID отправленного сообщения
    */
   sendMessage(
-    chatId: string | number,
-    text: string,
-    options?: {
+    _chatId: string | number,
+    _text: string,
+    _options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
       replyMarkup?: unknown;
     },
@@ -27,9 +27,9 @@ export interface ITelegramBotService {
    * @returns ID отправленного сообщения
    */
   sendChannelMessage(
-    channelId: string,
-    text: string,
-    options?: {
+    _channelId: string,
+    _text: string,
+    _options?: {
       parseMode?: 'HTML' | 'Markdown' | 'MarkdownV2';
     },
   ): Promise<number>;
@@ -40,15 +40,15 @@ export interface ITelegramBotService {
    * @param messageId ID сообщения
    * @param text новый текст
    */
-  editMessage(chatId: string | number, messageId: number, text: string): Promise<void>;
+  editMessage(_chatId: string | number, _messageId: number, _text: string): Promise<void>;
 
   /**
    * Получает информацию о пользователе
    * @param userId ID пользователя
    * @returns информация о пользователе
    */
-  getUserInfo(userId: number): Promise<{
-    id: number;
+  getUserInfo(UserId: number): Promise<{
+    _id: number;
     username?: string;
     firstName?: string;
     lastName?: string;

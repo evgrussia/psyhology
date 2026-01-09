@@ -2,7 +2,10 @@ export default function AdminHomePage() {
   return (
     <main>
       <h1>Admin</h1>
-      <p>Каркас админ-панели (FEAT-PLT-01). Здесь будет UI по спекам админки.</p>
+      <p>Админ-панель (каркас, FEAT-PLT-01).</p>
+      <p>
+        Перейти в <a href="/content">Контент</a>.
+      </p>
     </main>
   );
 }

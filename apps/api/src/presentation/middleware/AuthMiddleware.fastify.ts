@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { ISessionRepository } from '../../../domain/identity/repositories/ISessionRepository';
-import { IUserRepository } from '../../../domain/identity/repositories/IUserRepository';
+import { ISessionRepository } from '../../domain/identity/repositories/ISessionRepository';
+import { IUserRepository } from '../../domain/identity/repositories/IUserRepository';
 
 /**
  * Middleware для проверки аутентификации (Fastify version)
@@ -70,7 +70,7 @@ export class AuthMiddleware {
         request.currentUser = user;
         request.sessionId = sessionId as string;
       } catch (error) {
-        request.log.error('Auth middleware error:', error);
+        request.log.error({ err: error }, 'Auth middleware error');
         return reply.code(500).send({ error: 'Internal Server Error' });
       }
     };

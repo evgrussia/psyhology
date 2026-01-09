@@ -11,10 +11,10 @@ export interface IGoogleCalendarService {
    * @returns массив занятых интервалов
    */
   getBusyIntervals(
-    calendarId: string,
-    startTime: Date,
-    endTime: Date,
-  ): Promise<Array<{ start: Date; end: Date }>>;
+    _calendarId: string,
+    _startTime: Date,
+    _endTime: Date,
+  ): Promise<Array<{ _start: Date; _end: Date }>>;
 
   /**
    * Создаёт событие в календаре
@@ -23,13 +23,13 @@ export interface IGoogleCalendarService {
    * @returns ID созданного события
    */
   createEvent(
-    calendarId: string,
+    _calendarId: string,
     event: {
-      summary: string;
+      _summary: string;
       description?: string;
-      start: Date;
-      end: Date;
-      attendees?: Array<{ email: string }>;
+      _start: Date;
+      _end: Date;
+      attendees?: Array<{ _email: string }>;
     },
   ): Promise<string>;
 
@@ -38,5 +38,5 @@ export interface IGoogleCalendarService {
    * @param calendarId ID календаря
    * @param eventId ID события
    */
-  deleteEvent(calendarId: string, eventId: string): Promise<void>;
+  deleteEvent(_calendarId: string, _eventId: string): Promise<void>;
 }
