@@ -1,0 +1,160 @@
+/* Base Tag Styles */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: all var(--duration-fast) ease;
+  line-height: 1.2;
+}
+
+/* === SIZES === */
+
+.sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-sm);
+  min-height: 28px;
+}
+
+.md {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-base);
+  min-height: 36px;
+}
+
+/* === VARIANTS === */
+
+/* Sage */
+.sage {
+  background: white;
+  color: var(--color-sage-700);
+  border-color: var(--color-sage-200);
+}
+
+.sage:hover:where(.interactive) {
+  background: var(--color-sage-50);
+  border-color: var(--color-sage-300);
+}
+
+.sage.selected {
+  background: var(--color-sage-100);
+  border-color: var(--color-sage-500);
+  color: var(--color-sage-900);
+}
+
+/* Coral */
+.coral {
+  background: white;
+  color: var(--color-sand-800);
+  border-color: var(--color-coral-400);
+}
+
+.coral:hover:where(.interactive) {
+  background: var(--color-coral-300);
+  border-color: var(--color-coral-500);
+}
+
+.coral.selected {
+  background: var(--color-coral-300);
+  border-color: var(--color-coral-500);
+}
+
+/* Lavender */
+.lavender {
+  background: white;
+  color: var(--color-sand-800);
+  border-color: var(--color-lavender-400);
+}
+
+.lavender:hover:where(.interactive) {
+  background: var(--color-lavender-400);
+  border-color: var(--color-lavender-500);
+}
+
+.lavender.selected {
+  background: var(--color-lavender-400);
+  border-color: var(--color-lavender-500);
+}
+
+/* Neutral */
+.neutral {
+  background: white;
+  color: var(--color-sand-700);
+  border-color: var(--color-sand-300);
+}
+
+.neutral:hover:where(.interactive) {
+  background: var(--color-sand-100);
+  border-color: var(--color-sand-400);
+}
+
+.neutral.selected {
+  background: var(--color-sand-200);
+  border-color: var(--color-sand-500);
+}
+
+/* === INTERACTIVE === */
+
+.interactive {
+  cursor: pointer;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.interactive:focus-visible {
+  box-shadow: var(--shadow-focus);
+}
+
+/* === REMOVE BUTTON === */
+
+.removeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: currentColor;
+  border-radius: var(--radius-circle);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition: all var(--duration-fast) ease;
+  margin-left: var(--space-1);
+  margin-right: calc(-1 * var(--space-1));
+}
+
+.removeButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.removeButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* === ACCESSIBILITY === */
+
+@media (prefers-reduced-motion: reduce) {
+  .tag {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .tag {
+    border-width: 2px;
+  }
+  
+  .interactive:focus-visible {
+    outline-width: 3px;
+    outline-offset: 2px;
+  }
+}

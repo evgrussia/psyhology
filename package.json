@@ -1,0 +1,23 @@
+{
+  "name": "emotional-balance",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "lint": "npm run -ws --if-present lint",
+    "typecheck": "npm run -ws --if-present typecheck",
+    "test": "npm run -ws --if-present test",
+    "build": "npm run -ws --if-present build",
+    "dev": "concurrently -n api,web,admin \"npm -w @emotional-balance/api run dev\" \"npm -w @emotional-balance/web run dev\" \"npm -w @emotional-balance/admin run dev\"",
+    "dev:infra": "docker compose up -d",
+    "dev:infra:down": "docker compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2"
+  }
+}

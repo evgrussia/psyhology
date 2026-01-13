@@ -1,0 +1,103 @@
+/* Base Link */
+.link {
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  transition: all var(--duration-fast) ease;
+  cursor: pointer;
+  outline: none;
+  border-radius: var(--radius-xs);
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--color-sage-500);
+  outline-offset: 2px;
+}
+
+/* === VARIANTS === */
+
+/* Default (inline текстовая ссылка) */
+.default {
+  color: var(--color-sage-600);
+}
+
+.default:hover {
+  color: var(--color-sage-700);
+}
+
+/* Primary (акцентная ссылка) */
+.primary {
+  color: var(--color-sage-700);
+  font-weight: var(--font-weight-medium);
+}
+
+.primary:hover {
+  color: var(--color-sage-800);
+}
+
+/* Ghost (тихая ссылка) */
+.ghost {
+  color: var(--color-text-secondary);
+}
+
+.ghost:hover {
+  color: var(--color-text-primary);
+}
+
+/* CTA (призыв к действию) */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-sage-700);
+  font-weight: var(--font-weight-semibold);
+}
+
+.cta:hover {
+  color: var(--color-sage-800);
+  gap: var(--space-3);
+}
+
+/* === UNDERLINE VARIANTS === */
+
+.underline-always {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.underline-hover {
+  text-decoration: none;
+}
+
+.underline-hover:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.underline-none {
+  text-decoration: none;
+}
+
+/* === ACCESSIBILITY === */
+
+@media (prefers-reduced-motion: reduce) {
+  .link {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .link:focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+  
+  .underline-always,
+  .underline-hover:hover {
+    text-decoration-thickness: 2px;
+  }
+}

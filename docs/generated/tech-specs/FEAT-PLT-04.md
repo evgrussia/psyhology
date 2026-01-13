@@ -194,7 +194,7 @@
 - генерация object_key, валидация mime/size.
 
 ### 12.2 Integration tests
-- init → upload (S3 mock/minio) → finalize → публичный GET.
+- init → upload (MinIO, S3-compatible) → finalize → публичный GET.
 
 ### 12.3 E2E (критические happy paths)
 - загрузить изображение в админке и увидеть в превью статьи (в рамках `FEAT-CNT-01`).

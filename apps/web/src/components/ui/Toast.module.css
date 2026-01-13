@@ -1,0 +1,135 @@
+/* Toast Container */
+.container {
+  position: fixed;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: calc(100% - 2 * var(--space-6));
+  max-width: 560px;
+  pointer-events: none;
+}
+
+/* Toast Item */
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  animation: slideUp var(--duration-normal) var(--ease-out);
+  pointer-events: auto;
+  min-height: 52px;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Message */
+.message {
+  flex: 1;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Close Button */
+.closeButton {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: currentColor;
+  border-radius: var(--radius-circle);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  transition: background var(--duration-fast) ease;
+  outline: none;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* === VARIANTS === */
+
+/* Info (по умолчанию - тёмный sage) */
+.info {
+  background: rgba(30, 63, 61, 0.92);
+  color: var(--color-sand-50);
+}
+
+/* Success */
+.success {
+  background: var(--color-success-500);
+  color: white;
+}
+
+/* Warning */
+.warning {
+  background: var(--color-warning-500);
+  color: white;
+}
+
+/* Error */
+.error {
+  background: var(--color-error-500);
+  color: white;
+}
+
+/* === ACCESSIBILITY === */
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .container {
+    bottom: var(--space-4);
+    width: calc(100% - 2 * var(--space-4));
+  }
+  
+  .toast {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* High Contrast */
+@media (prefers-contrast: high) {
+  .toast {
+    border: 2px solid currentColor;
+  }
+  
+  .closeButton:focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+}

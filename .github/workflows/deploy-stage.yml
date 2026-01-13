@@ -1,0 +1,63 @@
+name: Deploy to Stage
+
+on:
+  push:
+    branches:
+      - develop
+      - stage
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: stage
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.18.0
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: Run database migrations
+        env:
+          DATABASE_URL: ${{ secrets.STAGE_DATABASE_URL }}
+        run: |
+          cd apps/api
+          npm run migrate:up
+
+      - name: Deploy API
+        # TODO: Заменить на реальный деплой (Docker, Cloud Run, etc.)
+        run: |
+          echo "Deploying API to stage..."
+          # Пример: docker build -t api:stage && docker push ...
+          # Или: gcloud run deploy api --image=... --region=...
+
+      - name: Deploy Web
+        # TODO: Заменить на реальный деплой
+        run: |
+          echo "Deploying Web to stage..."
+          # Пример: vercel deploy --prod ...
+
+      - name: Deploy Admin
+        # TODO: Заменить на реальный деплой
+        run: |
+          echo "Deploying Admin to stage..."
+          # Пример: vercel deploy --prod ...
+
+      - name: Healthcheck
+        run: |
+          echo "Running healthchecks..."
+          # TODO: Проверить /api/health и /api/version после деплоя
+          # curl -f https://api-stage.example.com/api/health || exit 1

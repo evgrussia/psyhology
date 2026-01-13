@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.18.0
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup PostgreSQL
+        uses: ankane/setup-postgres@v1
+        with:
+          postgresql-version: '16'
+          postgresql-db: emotional_balance_test
+
+      - name: Check database migrations
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/emotional_balance_test?schema=public
+        run: |
+          cd apps/api
+          npm run prisma:generate
+          # Создаём первую миграцию, если её нет
+          if [ ! -d "prisma/migrations" ]; then
+            npm run migrate:dev -- --name init --create-only
+          fi
+          # Применяем миграции
+          npm run migrate:up
+          # Применяем seed данные
+          npm run seed
+          # Проверяем статус
+          npm run migrate:status
+
+      - name: Run database integration tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/emotional_balance_test?schema=public
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/emotional_balance_test?schema=public
+        run: |
+          cd apps/api
+          npm test -- src/infrastructure/persistence/migrations.test.ts
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
