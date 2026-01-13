@@ -33,7 +33,6 @@
 
 ### 🎨 Дизайн и контент
 
-- **[UI Kit / Design System — полная дизайн-система проекта](./UI-Kit-Design-System.md)**
 - [Контент‑гайд / UX‑копирайтинг](./Content-Guide-UX-Copywriting.md)
 
 ### 🔧 Технические спецификации
